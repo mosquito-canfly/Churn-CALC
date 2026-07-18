@@ -1,8 +1,11 @@
+"use client";
+
 import { Users, AlertTriangle, DollarSign, TrendingUp } from "lucide-react";
 import MetricCard from "@/components/MetricCard";
 import RiskDistributionChart from "@/components/RiskDistributionChart";
 import CustomerTable from "@/components/CustomerTable";
 import UploadModal from "@/components/UploadModal";
+import { useCustomersWithRisk } from "@/lib/useCustomersWithRisk";
 import {
   getTotalCustomers,
   getPercentAtRisk,
@@ -13,7 +16,8 @@ import {
 import { formatCurrency } from "@/lib/risk";
 
 export default function OverviewPage() {
-  const topCustomers = getTopCustomersByRisk(10);
+  const { customers, error } = useCustomersWithRisk();
+  const topCustomers = getTopCustomersByRisk(customers, 10);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
@@ -27,15 +31,21 @@ export default function OverviewPage() {
         <UploadModal />
       </div>
 
+      {error && (
+        <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-800">
+          {error} Showing cached risk scores instead.
+        </div>
+      )}
+
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <MetricCard label="Total Customers" value={getTotalCustomers().toString()} icon={Users} />
-        <MetricCard label="% At Risk" value={`${getPercentAtRisk()}%`} icon={AlertTriangle} tone="danger" />
-        <MetricCard label="Revenue at Risk" value={formatCurrency(getRevenueAtRisk())} icon={DollarSign} tone="danger" />
-        <MetricCard label="MRR" value={formatCurrency(getMRR())} icon={TrendingUp} />
+        <MetricCard label="Total Customers" value={getTotalCustomers(customers).toString()} icon={Users} />
+        <MetricCard label="% At Risk" value={`${getPercentAtRisk(customers)}%`} icon={AlertTriangle} tone="danger" />
+        <MetricCard label="Revenue at Risk" value={formatCurrency(getRevenueAtRisk(customers))} icon={DollarSign} tone="danger" />
+        <MetricCard label="MRR" value={formatCurrency(getMRR(customers))} icon={TrendingUp} />
       </div>
 
       <div className="mt-6">
-        <RiskDistributionChart />
+        <RiskDistributionChart customers={customers} />
       </div>
 
       <div className="mt-6">

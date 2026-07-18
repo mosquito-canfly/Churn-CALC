@@ -3,7 +3,8 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ArrowUpDown } from "lucide-react";
-import { customers, type RiskCategory } from "@/lib/mockData";
+import { type RiskCategory } from "@/lib/mockData";
+import { useCustomersWithRisk } from "@/lib/useCustomersWithRisk";
 import { formatDate } from "@/lib/risk";
 import RiskBadge from "@/components/RiskBadge";
 import RiskScoreBar from "@/components/RiskScoreBar";
@@ -14,6 +15,7 @@ type SortDirection = "asc" | "desc";
 const categoryFilters: (RiskCategory | "All")[] = ["All", "Healthy", "Under-utilized", "At-risk"];
 
 export default function CustomersPage() {
+  const { customers, error } = useCustomersWithRisk();
   const [categoryFilter, setCategoryFilter] = useState<RiskCategory | "All">("All");
   const [sortKey, setSortKey] = useState<SortKey>("churnRisk");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
@@ -44,7 +46,7 @@ export default function CustomersPage() {
     });
 
     return sorted;
-  }, [categoryFilter, sortKey, sortDirection]);
+  }, [customers, categoryFilter, sortKey, sortDirection]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
@@ -54,6 +56,12 @@ export default function CustomersPage() {
           {filteredAndSorted.length} of {customers.length} customers
         </p>
       </div>
+
+      {error && (
+        <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-800">
+          {error} Showing cached risk scores instead.
+        </div>
+      )}
 
       <div className="mt-5 flex flex-wrap items-center gap-2">
         {categoryFilters.map((category) => (

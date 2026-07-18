@@ -1,0 +1,15 @@
+{
+  "features": [
+    "Account_Age_Days",
+    "Daily_Usage_Mins",
+    "login_freq_enc",
+    "ticket_sentiment"
+  ],
+  "login_freq_encoding": {
+    "Rarely": 0,
+    "Weekly": 1,
+    "Daily": 2
+  },
+  "default_sentiment": 0.0,
+  "threshold": 0.5
+}

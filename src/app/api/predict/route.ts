@@ -1,14 +1,31 @@
 import { NextResponse } from "next/server";
-import { getCustomerById } from "@/lib/mockData";
 
-// TODO: replace with a real churn prediction model call.
+const ML_SERVICE_URL = process.env.ML_SERVICE_URL ?? "http://localhost:8000";
+
 export async function POST(request: Request) {
   const body = await request.json().catch(() => ({}));
-  const customer = typeof body.customerId === "string" ? getCustomerById(body.customerId) : undefined;
 
-  return NextResponse.json({
-    customerId: body.customerId ?? null,
-    churnRisk: customer?.churnRisk ?? Math.floor(Math.random() * 100),
-    riskCategory: customer?.riskCategory ?? "Under-utilized",
-  });
+  let upstream: Response;
+  try {
+    upstream = await fetch(`${ML_SERVICE_URL}/predict`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  } catch {
+    return NextResponse.json(
+      { error: `Could not reach the ML service at ${ML_SERVICE_URL}. Is it running?` },
+      { status: 503 }
+    );
+  }
+
+  if (!upstream.ok) {
+    return NextResponse.json(
+      { error: `ML service responded with status ${upstream.status}.` },
+      { status: 503 }
+    );
+  }
+
+  const data = await upstream.json();
+  return NextResponse.json(data);
 }

@@ -426,34 +426,37 @@ export function getCustomerById(id: string): Customer | undefined {
   return customers.find((c) => c.id === id);
 }
 
-export function getTotalCustomers(): number {
-  return customers.length;
+export function getTotalCustomers(list: Customer[] = customers): number {
+  return list.length;
 }
 
-export function getAtRiskCustomers(): Customer[] {
-  return customers.filter((c) => c.riskCategory === "At-risk");
+export function getAtRiskCustomers(list: Customer[] = customers): Customer[] {
+  return list.filter((c) => c.riskCategory === "At-risk");
 }
 
-export function getPercentAtRisk(): number {
-  return Math.round((getAtRiskCustomers().length / customers.length) * 100);
+export function getPercentAtRisk(list: Customer[] = customers): number {
+  if (list.length === 0) return 0;
+  return Math.round((getAtRiskCustomers(list).length / list.length) * 100);
 }
 
-export function getRevenueAtRisk(): number {
-  return getAtRiskCustomers().reduce((sum, c) => sum + c.monthlyValue, 0);
+export function getRevenueAtRisk(list: Customer[] = customers): number {
+  return getAtRiskCustomers(list).reduce((sum, c) => sum + c.monthlyValue, 0);
 }
 
-export function getMRR(): number {
-  return customers.reduce((sum, c) => sum + c.monthlyValue, 0);
+export function getMRR(list: Customer[] = customers): number {
+  return list.reduce((sum, c) => sum + c.monthlyValue, 0);
 }
 
-export function getRiskDistribution(): { category: RiskCategory; count: number }[] {
+export function getRiskDistribution(
+  list: Customer[] = customers
+): { category: RiskCategory; count: number }[] {
   const categories: RiskCategory[] = ["Healthy", "Under-utilized", "At-risk"];
   return categories.map((category) => ({
     category,
-    count: customers.filter((c) => c.riskCategory === category).length,
+    count: list.filter((c) => c.riskCategory === category).length,
   }));
 }
 
-export function getTopCustomersByRisk(limit: number = 10): Customer[] {
-  return [...customers].sort((a, b) => b.churnRisk - a.churnRisk).slice(0, limit);
+export function getTopCustomersByRisk(list: Customer[] = customers, limit: number = 10): Customer[] {
+  return [...list].sort((a, b) => b.churnRisk - a.churnRisk).slice(0, limit);
 }

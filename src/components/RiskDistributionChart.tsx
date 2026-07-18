@@ -1,7 +1,7 @@
 "use client";
 
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
-import { getRiskDistribution } from "@/lib/mockData";
+import { getRiskDistribution, type Customer } from "@/lib/mockData";
 
 const COLORS: Record<string, string> = {
   Healthy: "#10b981",
@@ -9,8 +9,8 @@ const COLORS: Record<string, string> = {
   "At-risk": "#ef4444",
 };
 
-export default function RiskDistributionChart() {
-  const data = getRiskDistribution();
+export default function RiskDistributionChart({ customers }: { customers: Customer[] }) {
+  const data = getRiskDistribution(customers);
 
   return (
     <div className="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm">
