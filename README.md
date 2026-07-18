@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Churn-CALC
 
-## Getting Started
+A churn-prediction dashboard for subscription businesses. It scores each customer's
+risk of cancelling, explains *why* in plain language, and suggests a retention action —
+aimed at small SaaS/subscription teams who can't afford enterprise customer-success tools.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## What's built so far
+
+- **Frontend (Next.js)** — Overview dashboard, Customers list, and Customer detail pages.
+- **ML model (XGBoost)** — trained on subscription behaviour + support-ticket sentiment.
+  Scores churn risk from 0–100. Test ROC-AUC ≈ 0.83.
+- **ML service (FastAPI)** — a small Python server that loads the model and returns
+  predictions over HTTP. The frontend calls this for live risk scores.
+
+## Still to do
+
+- Wire the frontend's `/api/predict` route to the ML service (in progress).
+- Gemini layer — turn risk scores into plain-language explanations + draft retention messages.
+- Load the real demo dataset into the app and polish for the live demo.
+
+---
+
+## Project structure
+
+```
+Churn-CALC/
+  ml-service/          Python FastAPI service that serves the model
+    main.py
+    requirements.txt
+    artifacts/         the trained model + config files
+  src/                 Next.js app (frontend + API routes)
+  ...
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## How to run it
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+You need **two terminals** — one for the ML service, one for the web app.
 
-## Learn More
+### 1. Start the ML service (Terminal 1)
 
-To learn more about Next.js, take a look at the following resources:
+```
+cd ml-service
+pip install -r requirements.txt
+uvicorn main:app --reload --port 8000
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Runs at http://localhost:8000
+Test it directly at http://localhost:8000/docs (interactive API page —
+you can send test predictions there without any frontend).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+> Note: this uses your global Python. A virtual environment is optional and not required.
+> If you see an error about `sklearn`, run `pip install scikit-learn`.
 
-## Deploy on Vercel
+### 2. Start the web app (Terminal 2)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+npm install
+npm run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Open http://localhost:3000
+
+Keep **both** running at the same time — the web app calls the ML service for risk scores.
+
+---
+
+## The model, briefly
+
+Trained on ~2,000 customer records. It predicts churn from four signals:
+
+- Account age (days)
+- Daily usage (minutes)
+- Login frequency (Daily / Weekly / Rarely)
+- Support-ticket sentiment (scored from the ticket text)
+
+Sentiment is the second most predictive feature — evidence that combining
+behavioural + text signals beats a numbers-only model.
+
+Model training lives in the Colab notebook (Churn_CALC_Model_Training.ipynb).
+You don't need to retrain it — the trained artifacts are already in ml-service/artifacts/.
+
+---
+
+## Tech stack
+
+Frontend: Next.js, TypeScript, Tailwind
+ML: Python, XGBoost, scikit-learn
+Serving: FastAPI
+(Planned) AI layer: Gemini API
