@@ -2,6 +2,7 @@
 
 import { Users, AlertTriangle, DollarSign, TrendingUp } from "lucide-react";
 import MetricCard from "@/components/MetricCard";
+import RevenueImpactPanel from "@/components/RevenueImpactPanel";
 import RiskDistributionChart from "@/components/RiskDistributionChart";
 import CustomerTable from "@/components/CustomerTable";
 import UploadModal from "@/components/UploadModal";
@@ -42,6 +43,10 @@ export default function OverviewPage() {
         <MetricCard label="% At Risk" value={`${getPercentAtRisk(customers)}%`} icon={AlertTriangle} tone="danger" />
         <MetricCard label="Revenue at Risk" value={formatCurrency(getRevenueAtRisk(customers))} icon={DollarSign} tone="danger" />
         <MetricCard label="MRR" value={formatCurrency(getMRR(customers))} icon={TrendingUp} />
+      </div>
+
+      <div className="mt-6">
+        <RevenueImpactPanel customers={customers} />
       </div>
 
       <div className="mt-6">

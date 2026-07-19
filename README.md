@@ -15,6 +15,9 @@ aimed at small SaaS/subscription teams who can't afford enterprise customer-succ
   predictions over HTTP. `/api/predict` forwards to it directly — this is live, not mocked.
 - **What-if simulator** — on the customer detail page, dragging usage/login/ticket-resolution
   controls re-runs the real model (debounced) and shows the updated score against baseline.
+- **Revenue-at-risk panel** — on the Overview page, monthly/annual revenue at risk plus an
+  estimated recoverable amount if you act on your at-risk customers (assumes a 40% retention
+  rate, configurable via `RETENTION_RATE` in `RevenueImpactPanel.tsx`).
 - **Gemini layer** — `/api/explain` turns a risk score into a plain-language explanation and
   recommended action; `/api/draft-message` drafts a retention email. Both fall back to
   templated text if Gemini is unreachable or `GEMINI_API_KEY` isn't set.
