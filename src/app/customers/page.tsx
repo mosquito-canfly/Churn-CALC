@@ -6,8 +6,10 @@ import { ArrowUpDown } from "lucide-react";
 import { type RiskCategory } from "@/lib/mockData";
 import { useCustomersWithRisk } from "@/lib/useCustomersWithRisk";
 import { formatDate } from "@/lib/risk";
+import { getPlanRecommendation } from "@/lib/planRecommendation";
 import RiskBadge from "@/components/RiskBadge";
 import RiskScoreBar from "@/components/RiskScoreBar";
+import RecommendationBadge from "@/components/RecommendationBadge";
 
 type SortKey = "churnRisk" | "lastActive";
 type SortDirection = "asc" | "desc";
@@ -105,6 +107,7 @@ export default function CustomersPage() {
                   </button>
                 </th>
                 <th className="px-5 py-3">Risk Category</th>
+                <th className="px-5 py-3">Recommendation</th>
               </tr>
             </thead>
             <tbody>
@@ -130,11 +133,14 @@ export default function CustomersPage() {
                   <td className="px-5 py-3">
                     <RiskBadge category={customer.riskCategory} />
                   </td>
+                  <td className="px-5 py-3">
+                    <RecommendationBadge kind={getPlanRecommendation(customer).kind} />
+                  </td>
                 </tr>
               ))}
               {filteredAndSorted.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-5 py-10 text-center text-neutral-400">
+                  <td colSpan={6} className="px-5 py-10 text-center text-neutral-400">
                     No customers match the current filters.
                   </td>
                 </tr>

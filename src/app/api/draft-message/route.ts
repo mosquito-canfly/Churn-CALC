@@ -9,7 +9,8 @@ interface DraftMessageInput extends AICustomerContext {
 function buildPrompt(c: DraftMessageInput): string {
   return `You are a customer-success copywriter. Based ONLY on the data below, write a short,
 warm, personalized retention email from the company to this customer, addressing their
-specific situation. If the churn risk is high, include a relevant offer. Do not invent
+specific situation. Weave the recommended action below into the email naturally as the
+concrete next step — the email should be consistent with it, not generic. Do not invent
 facts not present in the data. Keep the body under 120 words, professional but friendly.
 
 Customer: ${c.name}

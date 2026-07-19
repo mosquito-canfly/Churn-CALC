@@ -1,8 +1,10 @@
 import Link from "next/link";
 import type { Customer } from "@/lib/mockData";
 import { formatDate } from "@/lib/risk";
+import { getPlanRecommendation } from "@/lib/planRecommendation";
 import RiskBadge from "@/components/RiskBadge";
 import RiskScoreBar from "@/components/RiskScoreBar";
+import RecommendationBadge from "@/components/RecommendationBadge";
 
 export default function CustomerTable({ customers }: { customers: Customer[] }) {
   return (
@@ -16,6 +18,7 @@ export default function CustomerTable({ customers }: { customers: Customer[] }) 
               <th className="px-5 py-3">Risk Score</th>
               <th className="px-5 py-3">Last Active</th>
               <th className="px-5 py-3">Category</th>
+              <th className="px-5 py-3">Recommendation</th>
             </tr>
           </thead>
           <tbody>
@@ -41,11 +44,14 @@ export default function CustomerTable({ customers }: { customers: Customer[] }) 
                 <td className="px-5 py-3">
                   <RiskBadge category={customer.riskCategory} />
                 </td>
+                <td className="px-5 py-3">
+                  <RecommendationBadge kind={getPlanRecommendation(customer).kind} />
+                </td>
               </tr>
             ))}
             {customers.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-5 py-10 text-center text-neutral-400">
+                <td colSpan={6} className="px-5 py-10 text-center text-neutral-400">
                   No customers match the current filters.
                 </td>
               </tr>

@@ -5,6 +5,7 @@ import { Sparkles, Target, Loader2, AlertTriangle } from "lucide-react";
 import type { Customer, RiskCategory } from "@/lib/mockData";
 import { predictChurn } from "@/lib/mlService";
 import type { AICustomerContext, ExplainResult } from "@/lib/aiTypes";
+import { getPlanRecommendation } from "@/lib/planRecommendation";
 import { formatCurrency, formatDate } from "@/lib/risk";
 import RiskBadge from "@/components/RiskBadge";
 import RiskWhatIfPanel from "@/components/RiskWhatIfPanel";
@@ -109,6 +110,14 @@ export default function CustomerDetailContent({ customer: baseCustomer }: { cust
     ? { ...baseCustomer, churnRisk: prediction.churnRisk, riskCategory: prediction.riskCategory }
     : baseCustomer;
 
+  const recommendation = getPlanRecommendation({
+    planTier: baseCustomer.planTier,
+    riskCategory: displayCustomer.riskCategory,
+    loginFrequency: baseCustomer.loginFrequency,
+    daysSinceLastLogin: baseCustomer.daysSinceLastLogin,
+    coreFeatureUsagePercentage: baseCustomer.coreFeatureUsagePercentage,
+  });
+
   const aiContext: AICustomerContext = {
     name: baseCustomer.name,
     planTier: baseCustomer.planTier,
@@ -198,22 +207,8 @@ export default function CustomerDetailContent({ customer: baseCustomer }: { cust
               <Target size={16} />
               Recommended Action
             </div>
-            {explainLoading && (
-              <div className="mt-2 flex items-center gap-2 text-sm text-blue-800">
-                <Loader2 size={14} className="animate-spin" />
-                Generating recommendation...
-              </div>
-            )}
-            {!explainLoading && explainError && (
-              <p className="mt-2 text-sm leading-relaxed text-blue-900">
-                Unable to generate a recommendation right now.
-              </p>
-            )}
-            {!explainLoading && !explainError && explainResult && (
-              <p className="mt-2 text-sm leading-relaxed text-blue-900">
-                {explainResult.recommendedAction}
-              </p>
-            )}
+            <p className="mt-2 text-sm font-medium text-blue-900">{recommendation.action}</p>
+            <p className="mt-1 text-sm leading-relaxed text-blue-800">{recommendation.rationale}</p>
           </div>
 
           <div className="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm">
@@ -223,7 +218,7 @@ export default function CustomerDetailContent({ customer: baseCustomer }: { cust
             </p>
           </div>
 
-          <DraftMessagePanel context={aiContext} recommendedAction={explainResult?.recommendedAction} />
+          <DraftMessagePanel context={aiContext} recommendedAction={recommendation.action} />
         </div>
       </div>
     </>
