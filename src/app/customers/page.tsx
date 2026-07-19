@@ -85,25 +85,41 @@ export default function CustomersPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-neutral-200 bg-neutral-50 text-xs font-medium uppercase tracking-wide text-neutral-500">
+              <tr className="border-b border-neutral-200 bg-neutral-50 text-xs font-medium uppercase tracking-wide text-neutral-600">
                 <th className="px-5 py-3">Name</th>
                 <th className="px-5 py-3">Plan Tier</th>
-                <th className="px-5 py-3">
+                <th
+                  className="px-5 py-3"
+                  aria-sort={
+                    sortKey === "churnRisk" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"
+                  }
+                >
                   <button
                     onClick={() => toggleSort("churnRisk")}
-                    className="flex items-center gap-1 hover:text-neutral-700"
+                    aria-label={`Sort by risk score, ${
+                      sortKey === "churnRisk" && sortDirection === "asc" ? "currently ascending" : "currently descending"
+                    }`}
+                    className="flex items-center gap-1 hover:text-neutral-900"
                   >
                     Risk Score
-                    <ArrowUpDown size={12} />
+                    <ArrowUpDown size={12} aria-hidden="true" />
                   </button>
                 </th>
-                <th className="px-5 py-3">
+                <th
+                  className="px-5 py-3"
+                  aria-sort={
+                    sortKey === "lastActive" ? (sortDirection === "asc" ? "ascending" : "descending") : "none"
+                  }
+                >
                   <button
                     onClick={() => toggleSort("lastActive")}
-                    className="flex items-center gap-1 hover:text-neutral-700"
+                    aria-label={`Sort by last active date, ${
+                      sortKey === "lastActive" && sortDirection === "asc" ? "currently ascending" : "currently descending"
+                    }`}
+                    className="flex items-center gap-1 hover:text-neutral-900"
                   >
                     Last Active
-                    <ArrowUpDown size={12} />
+                    <ArrowUpDown size={12} aria-hidden="true" />
                   </button>
                 </th>
                 <th className="px-5 py-3">Risk Category</th>

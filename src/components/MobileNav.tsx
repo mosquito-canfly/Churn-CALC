@@ -27,13 +27,14 @@ export default function MobileNav() {
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={isActive ? "page" : undefined}
                 className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium ${
                   isActive
                     ? "bg-neutral-900 text-white"
                     : "text-neutral-600 hover:bg-neutral-100"
                 }`}
               >
-                <Icon size={14} />
+                <Icon size={14} aria-hidden="true" />
                 {item.label}
               </Link>
             );

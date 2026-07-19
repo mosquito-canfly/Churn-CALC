@@ -34,7 +34,7 @@ export default function CustomerTable({ customers }: { customers: Customer[] }) 
                   >
                     {customer.name}
                   </Link>
-                  <div className="text-xs text-neutral-400">{customer.email}</div>
+                  <div className="text-xs text-neutral-600">{customer.email}</div>
                 </td>
                 <td className="px-5 py-3 text-neutral-600">{customer.planTier}</td>
                 <td className="px-5 py-3">
@@ -51,7 +51,7 @@ export default function CustomerTable({ customers }: { customers: Customer[] }) 
             ))}
             {customers.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-5 py-10 text-center text-neutral-400">
+                <td colSpan={6} className="px-5 py-10 text-center text-neutral-600">
                   No customers match the current filters.
                 </td>
               </tr>

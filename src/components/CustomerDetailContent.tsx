@@ -143,29 +143,29 @@ export default function CustomerDetailContent({ customer: baseCustomer }: { cust
           <p className="mt-1 text-sm text-neutral-500">{baseCustomer.email}</p>
           <dl className="mt-4 flex flex-wrap gap-x-8 gap-y-2 text-sm">
             <div>
-              <dt className="text-neutral-400">Plan Tier</dt>
+              <dt className="text-neutral-600">Plan Tier</dt>
               <dd className="font-medium text-neutral-800">{baseCustomer.planTier}</dd>
             </div>
             <div>
-              <dt className="text-neutral-400">Monthly Value</dt>
+              <dt className="text-neutral-600">Monthly Value</dt>
               <dd className="font-medium text-neutral-800">
                 {formatCurrency(baseCustomer.monthlyValue)}
               </dd>
             </div>
             <div>
-              <dt className="text-neutral-400">Account Age</dt>
+              <dt className="text-neutral-600">Account Age</dt>
               <dd className="font-medium text-neutral-800">{baseCustomer.accountAgeDays} days</dd>
             </div>
             <div>
-              <dt className="text-neutral-400">Login Frequency</dt>
+              <dt className="text-neutral-600">Login Frequency</dt>
               <dd className="font-medium text-neutral-800">{baseCustomer.loginFrequency}</dd>
             </div>
             <div>
-              <dt className="text-neutral-400">Daily Usage</dt>
+              <dt className="text-neutral-600">Daily Usage</dt>
               <dd className="font-medium text-neutral-800">{baseCustomer.dailyUsageMins} min</dd>
             </div>
             <div>
-              <dt className="text-neutral-400">Last Active</dt>
+              <dt className="text-neutral-600">Last Active</dt>
               <dd className="font-medium text-neutral-800">{formatDate(baseCustomer.lastActive)}</dd>
             </div>
           </dl>
@@ -180,18 +180,18 @@ export default function CustomerDetailContent({ customer: baseCustomer }: { cust
         <div className="space-y-6 lg:col-span-3">
           <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5">
             <div className="flex items-center gap-2 text-sm font-semibold text-emerald-800">
-              <Sparkles size={16} />
+              <Sparkles size={16} aria-hidden="true" />
               AI Explanation
             </div>
             {explainLoading && (
               <div className="mt-2 flex items-center gap-2 text-sm text-emerald-800">
-                <Loader2 size={14} className="animate-spin" />
+                <Loader2 size={14} className="animate-spin" aria-hidden="true" />
                 Generating explanation...
               </div>
             )}
             {!explainLoading && explainError && (
-              <div className="mt-2 flex items-center gap-2 text-sm text-emerald-900">
-                <AlertTriangle size={14} />
+              <div role="alert" className="mt-2 flex items-center gap-2 text-sm text-emerald-900">
+                <AlertTriangle size={14} aria-hidden="true" />
                 {explainError}
               </div>
             )}
@@ -204,7 +204,7 @@ export default function CustomerDetailContent({ customer: baseCustomer }: { cust
 
           <div className="rounded-xl border border-blue-200 bg-blue-50 p-5">
             <div className="flex items-center gap-2 text-sm font-semibold text-blue-800">
-              <Target size={16} />
+              <Target size={16} aria-hidden="true" />
               Recommended Action
             </div>
             <p className="mt-2 text-sm font-medium text-blue-900">{recommendation.action}</p>

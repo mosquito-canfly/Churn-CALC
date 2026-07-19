@@ -28,19 +28,20 @@ export default function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
+              aria-current={isActive ? "page" : undefined}
               className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                 isActive
                   ? "bg-neutral-900 text-white"
                   : "text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
               }`}
             >
-              <Icon size={18} />
+              <Icon size={18} aria-hidden="true" />
               {item.label}
             </Link>
           );
         })}
       </nav>
-      <div className="px-6 py-4 text-xs text-neutral-400">
+      <div className="px-6 py-4 text-xs text-neutral-600">
         Churn prediction, made simple.
       </div>
     </aside>

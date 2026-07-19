@@ -42,16 +42,25 @@ export default function DraftMessagePanel({ context, recommendedAction }: DraftM
         <button
           onClick={handleDraft}
           disabled={loading}
+          aria-label="Draft retention message"
+          aria-busy={loading}
           className="inline-flex items-center gap-2 rounded-lg bg-neutral-900 px-3.5 py-2 text-sm font-medium text-white hover:bg-neutral-700 disabled:opacity-60"
         >
-          {loading ? <Loader2 size={14} className="animate-spin" /> : <MessageSquareText size={14} />}
+          {loading ? (
+            <Loader2 size={14} className="animate-spin" aria-hidden="true" />
+          ) : (
+            <MessageSquareText size={14} aria-hidden="true" />
+          )}
           Draft message
         </button>
       </div>
 
       {error && (
-        <div className="mt-4 flex items-center gap-2 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
-          <AlertTriangle size={14} />
+        <div
+          role="alert"
+          className="mt-4 flex items-center gap-2 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700"
+        >
+          <AlertTriangle size={14} aria-hidden="true" />
           {error}
         </div>
       )}

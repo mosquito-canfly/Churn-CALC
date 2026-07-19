@@ -17,7 +17,7 @@ export default function MetricCard({ label, value, icon: Icon, tone = "neutral" 
             tone === "danger" ? "bg-red-50 text-red-600" : "bg-neutral-100 text-neutral-600"
           }`}
         >
-          <Icon size={16} />
+          <Icon size={16} aria-hidden="true" />
         </span>
       </div>
       <div

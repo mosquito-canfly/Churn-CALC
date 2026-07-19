@@ -1,5 +1,7 @@
 import type { RiskCategory } from "@/lib/mockData";
 
+// bar/dot use a darker shade than the base 500-weight hue so these small graphical
+// indicators meet WCAG AA non-text contrast (3:1+) against their light backgrounds.
 export const riskColors: Record<
   RiskCategory,
   { text: string; bg: string; ring: string; bar: string; dot: string }
@@ -8,22 +10,22 @@ export const riskColors: Record<
     text: "text-emerald-700",
     bg: "bg-emerald-50",
     ring: "ring-emerald-200",
-    bar: "bg-emerald-500",
-    dot: "bg-emerald-500",
+    bar: "bg-emerald-700",
+    dot: "bg-emerald-700",
   },
   "Under-utilized": {
     text: "text-amber-700",
     bg: "bg-amber-50",
     ring: "ring-amber-200",
-    bar: "bg-amber-500",
-    dot: "bg-amber-500",
+    bar: "bg-amber-700",
+    dot: "bg-amber-700",
   },
   "At-risk": {
     text: "text-red-700",
     bg: "bg-red-50",
     ring: "ring-red-200",
-    bar: "bg-red-500",
-    dot: "bg-red-500",
+    bar: "bg-red-700",
+    dot: "bg-red-700",
   },
 };
 
