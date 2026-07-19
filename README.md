@@ -1,110 +1,111 @@
 # Churn-CALC
 
-A churn-prediction dashboard for subscription businesses. It scores each customer's
-risk of cancelling, explains *why* in plain language, and suggests a retention action —
-aimed at small SaaS/subscription teams who can't afford enterprise customer-success tools.
+Churn-CALC — a churn-prediction dashboard that tells subscription businesses which
+customers are about to leave, why, and what to do about it.
 
----
+## Overview
 
-## What's built
+Churn-CALC helps small SaaS and subscription teams — the ones who can't afford
+enterprise customer-success tools — spot at-risk customers before they cancel. It's
+built on three pillars: real ML churn scoring, plain-language AI explanations of *why*
+a customer is at risk, and AI-drafted retention actions you can send right away.
 
-- **Frontend (Next.js)** — Overview dashboard, Customers list, and Customer detail pages.
-- **ML model (XGBoost)** — trained on subscription behaviour + support-ticket sentiment.
-  Scores churn risk from 0–100. Test ROC-AUC ≈ 0.83.
-- **ML service (FastAPI)** — a small Python server that loads the model and returns
-  predictions over HTTP. `/api/predict` forwards to it directly — this is live, not mocked.
-- **What-if simulator** — on the customer detail page, dragging usage/login/ticket-resolution
-  controls re-runs the real model (debounced) and shows the updated score against baseline.
-- **Revenue-at-risk panel** — on the Overview page, monthly/annual revenue at risk plus an
-  estimated recoverable amount if you act on your at-risk customers (assumes a 40% retention
-  rate, configurable via `RETENTION_RATE` in `RevenueImpactPanel.tsx`).
-- **Gemini layer** — `/api/explain` turns a risk score into a plain-language explanation and
-  recommended action; `/api/draft-message` drafts a retention email. Both fall back to
-  templated text if Gemini is unreachable or `GEMINI_API_KEY` isn't set.
+## Features
 
-## Still to do
+- Churn risk scoring per customer via a trained XGBoost model (test ROC-AUC ~0.83)
+- Plain-language "why" explanations grounded in each customer's real data (Gemini)
+- AI-drafted personalized retention emails (Gemini)
+- Interactive what-if panel that recomputes real risk when you change customer inputs
+- Revenue-at-risk / ROI business metrics on the dashboard
 
-- Customer roster is still a mock dataset — no database yet.
-- Load the real demo dataset into the app and polish for the live demo.
-
----
-
-## Project structure
+## Architecture
 
 ```
-Churn-CALC/
-  ml-service/          Python FastAPI service that serves the model
-    main.py
-    requirements.txt
-    artifacts/         the trained model + config files
-  src/                 Next.js app (frontend + API routes)
-  ...
+Browser
+  │
+  ▼
+Next.js app (frontend + API routes)
+  │
+  ├──► /api/predict ──────────────► FastAPI ML service (XGBoost)
+  │
+  └──► /api/explain,
+       /api/draft-message ───────► Gemini API
 ```
 
----
+The Next.js API routes are thin proxies — they forward requests to the ML service or
+Gemini, apply a typed response shape, and fall back to templated/mock output if either
+service is unreachable, so the UI never hard-fails.
 
-## How to run it
+## Tech stack
 
-You need **two terminals** — one for the ML service, one for the web app.
+| Layer       | Stack                                          |
+| ----------- | ----------------------------------------------- |
+| Frontend    | Next.js (App Router), TypeScript, Tailwind, Recharts |
+| ML service  | Python, FastAPI, XGBoost, scikit-learn          |
+| AI layer    | Gemini API                                      |
 
-### 1. Start the ML service (Terminal 1)
+## Getting started
+
+### Prerequisites
+
+- Node.js
+- Python 3
+- A [Gemini API key](https://aistudio.google.com/apikey)
+
+### Environment variables
+
+Copy `.env.example` to `.env.local` and fill it in:
 
 ```
+ML_SERVICE_URL=http://localhost:8000
+GEMINI_API_KEY=your-key-here
+```
+
+- `ML_SERVICE_URL` — base URL of the ML service. The default works for local dev.
+- `GEMINI_API_KEY` — get one from [Google AI Studio](https://aistudio.google.com/apikey).
+  Without it, `/api/explain` and `/api/draft-message` still work but fall back to
+  templated (non-AI) text.
+
+### Running it
+
+You need **two terminals** running at the same time.
+
+**Terminal 1 — ML service**
+
+```bash
 cd ml-service
 pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
 ```
 
-Runs at http://localhost:8000
-Test it directly at http://localhost:8000/docs (interactive API page —
-you can send test predictions there without any frontend).
+Runs at http://localhost:8000. Visit `/docs` for interactive API docs you can test
+predictions against directly.
 
-> Note: this uses your global Python. A virtual environment is optional and not required.
 > If you see an error about `sklearn`, run `pip install scikit-learn`.
 
-### 2. Start the web app (Terminal 2)
+**Terminal 2 — web app**
 
-```
-cp .env.example .env.local   # then fill in GEMINI_API_KEY
+```bash
 npm install
 npm run dev
 ```
 
-Open http://localhost:3000
+Open http://localhost:3000.
 
-Keep **both** running at the same time — the web app calls the ML service for risk scores.
+> Restart `npm run dev` after editing `.env.local` — Next.js only reads it on startup.
 
-### Environment variables
+## How the model works
 
-Set these in `.env.local` (see `.env.example`):
+The XGBoost model is trained on ~2,000 subscription-customer records and predicts
+churn from four signals: account age, daily usage, login frequency, and
+support-ticket sentiment. Sentiment is the second-strongest predictor — evidence that
+combining behavioral and text signals beats a numbers-only model.
 
-- `ML_SERVICE_URL` — base URL of the ML service. Defaults to `http://localhost:8000`, so
-  you usually don't need to set this for local dev.
-- `GEMINI_API_KEY` — your Gemini API key. Without it, `/api/explain` and
-  `/api/draft-message` still work but fall back to templated (non-AI) text.
+Training lives in `Churn_CALC_Model_Training.ipynb`. You don't need to retrain
+anything — the trained artifacts already ship in `ml-service/artifacts/`.
 
----
+## Project status
 
-## The model, briefly
-
-Trained on ~2,000 customer records. It predicts churn from four signals:
-
-- Account age (days)
-- Daily usage (minutes)
-- Login frequency (Daily / Weekly / Rarely)
-- Support-ticket sentiment (scored from the ticket text)
-
-Sentiment is the second most predictive feature — evidence that combining
-behavioural + text signals beats a numbers-only model.
-
-Model training lives in the Colab notebook (Churn_CALC_Model_Training.ipynb).
-You don't need to retrain it — the trained artifacts are already in ml-service/artifacts/.
-
----
-
-## Tech stack
-
-Frontend: Next.js, TypeScript, Tailwind
-ML: Python, XGBoost, scikit-learn
-Serving: FastAPI
-AI layer: Gemini API (explanations + draft retention messages)
+Feature-complete for the hackathon prototype. The customer roster is sample data
+(no database yet), but churn scoring, explanations, and retention drafting all run
+against real, live services.
