@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import type { Customer, RiskCategory } from "@/lib/mockData";
+import { useEffect, useState } from "react";
+import { Loader2, RotateCcw } from "lucide-react";
+import type { Customer, LoginFrequency, RiskCategory } from "@/lib/mockData";
 import { riskColors } from "@/lib/risk";
+import { predictChurn } from "@/lib/mlService";
 
 function categoryForScore(score: number): RiskCategory {
   if (score >= 65) return "At-risk";
@@ -16,25 +18,103 @@ const RING_COLOR: Record<RiskCategory, string> = {
   "At-risk": "#ef4444",
 };
 
-export default function RiskWhatIfPanel({ customer }: { customer: Customer }) {
-  const [discountPct, setDiscountPct] = useState(0);
-  const [ticketResolution, setTicketResolution] = useState(0);
+const LOGIN_FREQUENCIES: LoginFrequency[] = ["Rarely", "Weekly", "Daily"];
+const RESOLVED_TICKET_TEXT = "Thanks, my issue was resolved.";
+const DEBOUNCE_MS = 300;
 
-  // TODO: replace this mock arithmetic with a real call to the churn
-  // prediction model (POST /api/predict) once it exists.
-  const adjustedRisk = Math.max(
-    0,
-    Math.min(100, Math.round(customer.churnRisk - discountPct * 0.4 - ticketResolution * 0.15))
-  );
-  const category = categoryForScore(adjustedRisk);
+export default function RiskWhatIfPanel({ customer }: { customer: Customer }) {
+  const baselineRisk = customer.churnRisk;
+
+  const [dailyUsageMins, setDailyUsageMins] = useState(customer.dailyUsageMins);
+  const [loginFrequency, setLoginFrequency] = useState<LoginFrequency>(customer.loginFrequency);
+  const [resolveTicket, setResolveTicket] = useState(false);
+
+  const [simulatedRisk, setSimulatedRisk] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const isDirty =
+    dailyUsageMins !== customer.dailyUsageMins ||
+    loginFrequency !== customer.loginFrequency ||
+    resolveTicket;
+
+  useEffect(() => {
+    if (!isDirty) {
+      setSimulatedRisk(null);
+      setLoading(false);
+      setError(null);
+      return;
+    }
+
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+
+    const timer = setTimeout(async () => {
+      try {
+        const [result] = await predictChurn([
+          {
+            customer_id: customer.id,
+            account_age_days: customer.accountAgeDays,
+            daily_usage_mins: dailyUsageMins,
+            login_frequency: loginFrequency,
+            last_support_ticket: resolveTicket ? RESOLVED_TICKET_TEXT : customer.lastSupportTicket,
+          },
+        ]);
+        if (cancelled) return;
+        if (result) setSimulatedRisk(result.churn_risk);
+      } catch (err) {
+        if (cancelled) return;
+        setError(err instanceof Error ? err.message : "Failed to recompute risk.");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }, DEBOUNCE_MS);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    isDirty,
+    dailyUsageMins,
+    loginFrequency,
+    resolveTicket,
+    customer.id,
+    customer.accountAgeDays,
+    customer.lastSupportTicket,
+  ]);
+
+  function handleReset() {
+    setDailyUsageMins(customer.dailyUsageMins);
+    setLoginFrequency(customer.loginFrequency);
+    setResolveTicket(false);
+  }
+
+  const displayedRisk = simulatedRisk ?? baselineRisk;
+  const delta = displayedRisk - baselineRisk;
+  const category = categoryForScore(displayedRisk);
   const colors = riskColors[category];
 
   const circumference = 2 * Math.PI * 54;
-  const offset = circumference * (1 - adjustedRisk / 100);
+  const offset = circumference * (1 - displayedRisk / 100);
 
   return (
     <div className="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
-      <h2 className="text-sm font-medium text-neutral-500">Churn Risk Score</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-sm font-medium text-neutral-500">Churn Risk Score</h2>
+        {isDirty && (
+          <button
+            type="button"
+            onClick={handleReset}
+            className="flex items-center gap-1 text-xs font-medium text-neutral-400 hover:text-neutral-700"
+          >
+            <RotateCcw size={12} />
+            Reset
+          </button>
+        )}
+      </div>
 
       <div className="mt-4 flex flex-col items-center">
         <div className="relative h-36 w-36">
@@ -55,7 +135,7 @@ export default function RiskWhatIfPanel({ customer }: { customer: Customer }) {
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span className="text-3xl font-semibold tracking-tight text-neutral-900">
-              {adjustedRisk}
+              {displayedRisk}
             </span>
             <span className="text-xs text-neutral-400">/ 100</span>
           </div>
@@ -65,6 +145,30 @@ export default function RiskWhatIfPanel({ customer }: { customer: Customer }) {
         >
           {category}
         </span>
+
+        <p className="mt-3 text-xs text-neutral-500">
+          Baseline {baselineRisk} → {displayedRisk},{" "}
+          <span
+            className={
+              delta < 0
+                ? "font-medium text-emerald-600"
+                : delta > 0
+                  ? "font-medium text-red-600"
+                  : "font-medium text-neutral-500"
+            }
+          >
+            {delta > 0 ? "+" : ""}
+            {delta}
+          </span>
+        </p>
+
+        {loading && (
+          <div className="mt-2 flex items-center gap-1.5 text-xs text-neutral-400">
+            <Loader2 size={12} className="animate-spin" />
+            Recalculating...
+          </div>
+        )}
+        {!loading && error && <p className="mt-2 text-xs text-red-600">{error}</p>}
       </div>
 
       <div className="mt-6 space-y-5 border-t border-neutral-100 pt-5">
@@ -74,45 +178,75 @@ export default function RiskWhatIfPanel({ customer }: { customer: Customer }) {
 
         <div>
           <div className="flex items-center justify-between text-sm">
-            <label htmlFor="discount-slider" className="text-neutral-600">
-              Offer discount
+            <label htmlFor="usage-slider" className="text-neutral-600">
+              Daily usage
             </label>
-            <span className="font-medium text-neutral-800">{discountPct}%</span>
+            <span className="font-medium text-neutral-800">{dailyUsageMins} min</span>
           </div>
           <input
-            id="discount-slider"
+            id="usage-slider"
             type="range"
             min={0}
-            max={50}
-            step={5}
-            value={discountPct}
-            onChange={(e) => setDiscountPct(Number(e.target.value))}
+            max={120}
+            step={1}
+            value={dailyUsageMins}
+            onChange={(e) => setDailyUsageMins(Number(e.target.value))}
             className="mt-2 w-full accent-neutral-900"
           />
         </div>
 
         <div>
-          <div className="flex items-center justify-between text-sm">
-            <label htmlFor="ticket-slider" className="text-neutral-600">
-              Resolve support ticket
-            </label>
-            <span className="font-medium text-neutral-800">{ticketResolution}%</span>
+          <div className="text-sm text-neutral-600">Login frequency</div>
+          <div className="mt-2 grid grid-cols-3 gap-1 rounded-lg bg-neutral-100 p-1">
+            {LOGIN_FREQUENCIES.map((freq) => (
+              <button
+                key={freq}
+                type="button"
+                onClick={() => setLoginFrequency(freq)}
+                className={`rounded-md py-1.5 text-xs font-medium transition-colors ${
+                  loginFrequency === freq
+                    ? "bg-white text-neutral-900 shadow-sm"
+                    : "text-neutral-500 hover:text-neutral-700"
+                }`}
+              >
+                {freq}
+              </button>
+            ))}
           </div>
-          <input
-            id="ticket-slider"
-            type="range"
-            min={0}
-            max={100}
-            step={10}
-            value={ticketResolution}
-            onChange={(e) => setTicketResolution(Number(e.target.value))}
-            className="mt-2 w-full accent-neutral-900"
-          />
+        </div>
+
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-neutral-600">Resolve support ticket</span>
+          <div className="flex items-center gap-2">
+            <span
+              className={`text-xs font-medium ${
+                resolveTicket ? "text-emerald-600" : "text-neutral-400"
+              }`}
+            >
+              {resolveTicket ? "Resolved" : "Unresolved"}
+            </span>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={resolveTicket}
+              aria-label="Resolve support ticket"
+              onClick={() => setResolveTicket((v) => !v)}
+              className={`relative h-5 w-9 shrink-0 rounded-full transition-colors duration-200 ${
+                resolveTicket ? "bg-emerald-500" : "bg-neutral-200"
+              }`}
+            >
+              <span
+                className={`absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-200 ${
+                  resolveTicket ? "translate-x-4" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
         </div>
 
         <p className="text-xs leading-relaxed text-neutral-400">
-          These sliders adjust the score using simple placeholder arithmetic for demo purposes
-          only — they do not reflect real model predictions yet.
+          Adjust the inputs above to re-run the churn model with hypothetical values and see how
+          the risk score responds.
         </p>
       </div>
     </div>

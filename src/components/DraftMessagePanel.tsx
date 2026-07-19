@@ -1,25 +1,35 @@
 "use client";
 
 import { useState } from "react";
-import { MessageSquareText, Loader2 } from "lucide-react";
-import type { Customer } from "@/lib/mockData";
+import { MessageSquareText, Loader2, AlertTriangle } from "lucide-react";
+import type { AICustomerContext, DraftMessageResult } from "@/lib/aiTypes";
 
-export default function DraftMessagePanel({ customer }: { customer: Customer }) {
+interface DraftMessagePanelProps {
+  context: AICustomerContext;
+  recommendedAction?: string;
+}
+
+export default function DraftMessagePanel({ context, recommendedAction }: DraftMessagePanelProps) {
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [draft, setDraft] = useState<DraftMessageResult | null>(null);
 
   async function handleDraft() {
     setLoading(true);
-    // TODO: this currently hits a mock API route; swap in a real Gemini-backed
-    // draft once the integration exists.
+    setError(null);
     try {
       const res = await fetch("/api/draft-message", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ customerId: customer.id }),
+        body: JSON.stringify({ ...context, recommendedAction }),
       });
       const data = await res.json();
-      setMessage(data.message);
+      if (!res.ok) {
+        throw new Error(data.error ?? `Request failed with status ${res.status}.`);
+      }
+      setDraft(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to draft a message.");
     } finally {
       setLoading(false);
     }
@@ -39,9 +49,17 @@ export default function DraftMessagePanel({ customer }: { customer: Customer }) 
         </button>
       </div>
 
-      {message && (
-        <div className="mt-4 rounded-lg bg-neutral-50 p-4 text-sm leading-relaxed whitespace-pre-line text-neutral-700">
-          {message}
+      {error && (
+        <div className="mt-4 flex items-center gap-2 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+          <AlertTriangle size={14} />
+          {error}
+        </div>
+      )}
+
+      {draft && !error && (
+        <div className="mt-4 rounded-lg bg-neutral-50 p-4 text-sm leading-relaxed text-neutral-700">
+          <p className="font-medium text-neutral-900">{draft.subject}</p>
+          <p className="mt-2 whitespace-pre-line">{draft.body}</p>
         </div>
       )}
     </div>
