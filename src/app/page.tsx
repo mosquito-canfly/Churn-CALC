@@ -5,6 +5,7 @@ import MetricCard from "@/components/MetricCard";
 import RevenueImpactPanel from "@/components/RevenueImpactPanel";
 import RiskDistributionChart from "@/components/RiskDistributionChart";
 import CustomerTable from "@/components/CustomerTable";
+import AtRiskRegister from "@/components/AtRiskRegister";
 import UploadModal from "@/components/UploadModal";
 import { useCustomersWithRisk } from "@/lib/useCustomersWithRisk";
 import {
@@ -61,6 +62,17 @@ export default function OverviewPage() {
           </a>
         </div>
         <CustomerTable customers={topCustomers} />
+      </div>
+
+      <div className="mt-6">
+        <div className="mb-3">
+          <h2 className="text-sm font-medium text-neutral-500">At-Risk Register</h2>
+          <p className="mt-1 text-sm text-neutral-600">
+            Every at-risk and under-utilized customer, with the top driver behind their
+            score and the recommended action to take.
+          </p>
+        </div>
+        <AtRiskRegister customers={customers} />
       </div>
     </div>
   );

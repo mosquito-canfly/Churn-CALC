@@ -6,6 +6,7 @@ import type { Customer, RiskCategory } from "@/lib/mockData";
 import { predictChurn } from "@/lib/mlService";
 import type { AICustomerContext, ExplainResult } from "@/lib/aiTypes";
 import { getPlanRecommendation } from "@/lib/planRecommendation";
+import { getChurnReason } from "@/lib/churnReason";
 import { formatCurrency, formatDate } from "@/lib/risk";
 import RiskBadge from "@/components/RiskBadge";
 import RiskWhatIfPanel from "@/components/RiskWhatIfPanel";
@@ -117,6 +118,7 @@ export default function CustomerDetailContent({ customer: baseCustomer }: { cust
     daysSinceLastLogin: baseCustomer.daysSinceLastLogin,
     coreFeatureUsagePercentage: baseCustomer.coreFeatureUsagePercentage,
   });
+  const churnReason = getChurnReason(baseCustomer);
 
   const aiContext: AICustomerContext = {
     name: baseCustomer.name,
@@ -141,6 +143,10 @@ export default function CustomerDetailContent({ customer: baseCustomer }: { cust
             <RiskBadge category={displayCustomer.riskCategory} />
           </div>
           <p className="mt-1 text-sm text-neutral-500">{baseCustomer.email}</p>
+          <p className="mt-2 text-sm text-neutral-700">
+            <span className="font-medium text-neutral-900">Top risk factor:</span>{" "}
+            {churnReason.reason}
+          </p>
           <dl className="mt-4 flex flex-wrap gap-x-8 gap-y-2 text-sm">
             <div>
               <dt className="text-neutral-600">Plan Tier</dt>

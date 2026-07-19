@@ -1,0 +1,83 @@
+import Link from "next/link";
+import type { Customer } from "@/lib/mockData";
+import { formatCurrency } from "@/lib/risk";
+import { getChurnReason } from "@/lib/churnReason";
+import { getPlanRecommendation } from "@/lib/planRecommendation";
+import RiskBadge from "@/components/RiskBadge";
+import RecommendationBadge from "@/components/RecommendationBadge";
+
+export default function AtRiskRegister({ customers }: { customers: Customer[] }) {
+  const registered = customers.filter(
+    (c) => c.riskCategory === "At-risk" || c.riskCategory === "Under-utilized"
+  );
+
+  // At-risk first (most urgent), then under-utilized; each group ranked by churn score.
+  const sorted = [...registered].sort((a, b) => {
+    if (a.riskCategory !== b.riskCategory) {
+      return a.riskCategory === "At-risk" ? -1 : 1;
+    }
+    return b.churnRisk - a.churnRisk;
+  });
+
+  return (
+    <div className="overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm">
+      <div className="overflow-x-auto">
+        <table className="w-full text-left text-sm">
+          <thead>
+            <tr className="border-b border-neutral-200 bg-neutral-50 text-xs font-medium uppercase tracking-wide text-neutral-600">
+              <th className="px-5 py-3">Name</th>
+              <th className="px-5 py-3">Plan</th>
+              <th className="px-5 py-3">Monthly Value</th>
+              <th className="px-5 py-3">Churn Score</th>
+              <th className="px-5 py-3">Category</th>
+              <th className="px-5 py-3">Top Reason</th>
+              <th className="px-5 py-3">Recommended Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sorted.map((customer) => {
+              const { reason } = getChurnReason(customer);
+              const recommendation = getPlanRecommendation(customer);
+              return (
+                <tr
+                  key={customer.id}
+                  className="border-b border-neutral-100 last:border-0 hover:bg-neutral-50"
+                >
+                  <td className="px-5 py-3">
+                    <Link
+                      href={`/customers/${customer.id}`}
+                      className="font-medium text-neutral-900 hover:underline"
+                    >
+                      {customer.name}
+                    </Link>
+                  </td>
+                  <td className="px-5 py-3 text-neutral-600">{customer.planTier}</td>
+                  <td className="px-5 py-3 text-neutral-600">
+                    {formatCurrency(customer.monthlyValue)}
+                  </td>
+                  <td className="px-5 py-3 font-medium text-neutral-800 tabular-nums">
+                    {customer.churnRisk}
+                  </td>
+                  <td className="px-5 py-3">
+                    <RiskBadge category={customer.riskCategory} />
+                  </td>
+                  <td className="px-5 py-3 text-neutral-600">{reason}</td>
+                  <td className="px-5 py-3">
+                    <RecommendationBadge kind={recommendation.kind} />
+                  </td>
+                </tr>
+              );
+            })}
+            {sorted.length === 0 && (
+              <tr>
+                <td colSpan={7} className="px-5 py-10 text-center text-neutral-600">
+                  No at-risk or under-utilized customers right now.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
