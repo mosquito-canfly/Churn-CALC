@@ -7,6 +7,8 @@ export interface Customer {
   daily_usage_mins: number;
   login_frequency: LoginFrequency;
   last_support_ticket: string;
+  days_since_last_login: number;
+  core_feature_usage_percentage: number;
 }
 
 export interface Prediction {

@@ -5,6 +5,7 @@ import { Loader2, RotateCcw } from "lucide-react";
 import type { Customer, LoginFrequency, RiskCategory } from "@/lib/mockData";
 import { riskColors } from "@/lib/risk";
 import { predictChurn } from "@/lib/mlService";
+import { FEATURE_RANGES } from "@/lib/featureSchema";
 
 function categoryForScore(score: number): RiskCategory {
   if (score >= 65) return "At-risk";
@@ -21,6 +22,10 @@ const RING_COLOR: Record<RiskCategory, string> = {
 const LOGIN_FREQUENCIES: LoginFrequency[] = ["Rarely", "Weekly", "Daily"];
 const RESOLVED_TICKET_TEXT = "Thanks, my issue was resolved.";
 const DEBOUNCE_MS = 300;
+// Slider caps a practical, human-relevant window; the backend accepts a wider range.
+const DAYS_SINCE_LOGIN_SLIDER_MAX = 90;
+const USAGE_PCT_MIN = FEATURE_RANGES.core_feature_usage_percentage.min;
+const USAGE_PCT_MAX = FEATURE_RANGES.core_feature_usage_percentage.max;
 
 export default function RiskWhatIfPanel({ customer }: { customer: Customer }) {
   const baselineRisk = customer.churnRisk;
@@ -28,6 +33,10 @@ export default function RiskWhatIfPanel({ customer }: { customer: Customer }) {
   const [dailyUsageMins, setDailyUsageMins] = useState(customer.dailyUsageMins);
   const [loginFrequency, setLoginFrequency] = useState<LoginFrequency>(customer.loginFrequency);
   const [resolveTicket, setResolveTicket] = useState(false);
+  const [daysSinceLastLogin, setDaysSinceLastLogin] = useState(customer.daysSinceLastLogin);
+  const [coreFeatureUsagePercentage, setCoreFeatureUsagePercentage] = useState(
+    customer.coreFeatureUsagePercentage
+  );
 
   const [simulatedRisk, setSimulatedRisk] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
@@ -36,7 +45,9 @@ export default function RiskWhatIfPanel({ customer }: { customer: Customer }) {
   const isDirty =
     dailyUsageMins !== customer.dailyUsageMins ||
     loginFrequency !== customer.loginFrequency ||
-    resolveTicket;
+    resolveTicket ||
+    daysSinceLastLogin !== customer.daysSinceLastLogin ||
+    coreFeatureUsagePercentage !== customer.coreFeatureUsagePercentage;
 
   useEffect(() => {
     if (!isDirty) {
@@ -59,6 +70,8 @@ export default function RiskWhatIfPanel({ customer }: { customer: Customer }) {
             daily_usage_mins: dailyUsageMins,
             login_frequency: loginFrequency,
             last_support_ticket: resolveTicket ? RESOLVED_TICKET_TEXT : customer.lastSupportTicket,
+            days_since_last_login: daysSinceLastLogin,
+            core_feature_usage_percentage: coreFeatureUsagePercentage,
           },
         ]);
         if (cancelled) return;
@@ -81,6 +94,8 @@ export default function RiskWhatIfPanel({ customer }: { customer: Customer }) {
     dailyUsageMins,
     loginFrequency,
     resolveTicket,
+    daysSinceLastLogin,
+    coreFeatureUsagePercentage,
     customer.id,
     customer.accountAgeDays,
     customer.lastSupportTicket,
@@ -90,6 +105,8 @@ export default function RiskWhatIfPanel({ customer }: { customer: Customer }) {
     setDailyUsageMins(customer.dailyUsageMins);
     setLoginFrequency(customer.loginFrequency);
     setResolveTicket(false);
+    setDaysSinceLastLogin(customer.daysSinceLastLogin);
+    setCoreFeatureUsagePercentage(customer.coreFeatureUsagePercentage);
   }
 
   const displayedRisk = simulatedRisk ?? baselineRisk;
@@ -213,6 +230,44 @@ export default function RiskWhatIfPanel({ customer }: { customer: Customer }) {
               </button>
             ))}
           </div>
+        </div>
+
+        <div>
+          <div className="flex items-center justify-between text-sm">
+            <label htmlFor="days-since-login-slider" className="text-neutral-600">
+              Days since last login
+            </label>
+            <span className="font-medium text-neutral-800">{daysSinceLastLogin}d</span>
+          </div>
+          <input
+            id="days-since-login-slider"
+            type="range"
+            min={0}
+            max={DAYS_SINCE_LOGIN_SLIDER_MAX}
+            step={1}
+            value={daysSinceLastLogin}
+            onChange={(e) => setDaysSinceLastLogin(Number(e.target.value))}
+            className="mt-2 w-full accent-neutral-900"
+          />
+        </div>
+
+        <div>
+          <div className="flex items-center justify-between text-sm">
+            <label htmlFor="usage-pct-slider" className="text-neutral-600">
+              Core feature usage
+            </label>
+            <span className="font-medium text-neutral-800">{coreFeatureUsagePercentage}%</span>
+          </div>
+          <input
+            id="usage-pct-slider"
+            type="range"
+            min={USAGE_PCT_MIN}
+            max={USAGE_PCT_MAX}
+            step={1}
+            value={coreFeatureUsagePercentage}
+            onChange={(e) => setCoreFeatureUsagePercentage(Number(e.target.value))}
+            className="mt-2 w-full accent-neutral-900"
+          />
         </div>
 
         <div className="flex items-center justify-between text-sm">

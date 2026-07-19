@@ -20,6 +20,8 @@ export function useCustomersWithRisk() {
             daily_usage_mins: c.dailyUsageMins,
             login_frequency: c.loginFrequency,
             last_support_ticket: c.lastSupportTicket,
+            days_since_last_login: c.daysSinceLastLogin,
+            core_feature_usage_percentage: c.coreFeatureUsagePercentage,
           }))
         );
         if (cancelled) return;

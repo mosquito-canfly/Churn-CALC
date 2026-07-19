@@ -34,6 +34,8 @@ export default function CustomerDetailContent({ customer: baseCustomer }: { cust
             daily_usage_mins: baseCustomer.dailyUsageMins,
             login_frequency: baseCustomer.loginFrequency,
             last_support_ticket: baseCustomer.lastSupportTicket,
+            days_since_last_login: baseCustomer.daysSinceLastLogin,
+            core_feature_usage_percentage: baseCustomer.coreFeatureUsagePercentage,
           },
         ]);
         if (cancelled || !result) return;

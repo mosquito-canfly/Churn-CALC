@@ -1,0 +1,20 @@
+{
+  "Just checking if my payment went through.": 0.0,
+  "The integration with Slack works perfectly.": 0.6369,
+  "Your API documentation is outdated and full of errors.": -0.34,
+  "The UI is too confusing. I can't find the export button.": -0.2263,
+  "When will the maintenance window end?": 0.0,
+  "How do I change my password?": 0.0,
+  "The app crashes every time I try to upload a CSV.": 0.0,
+  "I love the new analytics feature! Great job.": 0.8622,
+  "Can I add more seats to my current plan?": 0.0,
+  "I've been waiting for support for 3 days. I'm cancelling.": 0.2263,
+  "Is there a tutorial for the new dashboard feature?": 0.0,
+  "This tool has saved my team so much time.": 0.4215,
+  "I'm very frustrated with the downtime. This is unacceptable.": -0.7713,
+  "Customer support was super helpful yesterday. Thanks!": 0.9117,
+  "Why did my subscription price increase without notice?": 0.3182,
+  "Smooth experience so far, no complaints.": 0.4215,
+  "I need to update my billing address.": 0.0,
+  "Just upgraded to the Pro plan, excited to use it.": 0.34
+}
