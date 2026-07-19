@@ -1,6 +1,6 @@
 /**
  * Mirrors ml-service/feature_schema.py — the backend's single source of truth for the
- * churn model's feature set (see ml-service/artifacts/v2/feature_config.json). Field
+ * churn model's feature set (see ml-service/artifacts/feature_config.json). Field
  * names and ranges here must match it exactly; this file transcribes the backend
  * contract rather than defining its own. Update both together.
  */

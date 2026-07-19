@@ -1,5 +1,5 @@
 """
-Churn-CALC ML Service (v2)
+Churn-CALC ML Service
 FastAPI server that loads the trained XGBoost model and serves churn predictions.
 The Next.js app calls this over HTTP from its /api/predict route.
 """
@@ -25,7 +25,7 @@ from feature_schema import (
 )
 
 # ---- Load artifacts once at startup -------------------------------------
-ARTIFACT_DIR = Path(__file__).parent / "artifacts" / "v2"
+ARTIFACT_DIR = Path(__file__).parent / "artifacts"
 
 model = xgb.XGBClassifier()
 model.load_model(str(ARTIFACT_DIR / "churn_model.json"))
