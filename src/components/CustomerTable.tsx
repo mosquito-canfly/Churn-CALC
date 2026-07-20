@@ -1,6 +1,6 @@
 import Link from "next/link";
-import type { Customer } from "@/lib/mockData";
-import { formatDate } from "@/lib/risk";
+import { getCustomerRevenueAtRisk, type Customer } from "@/lib/mockData";
+import { formatCurrency, formatDate } from "@/lib/risk";
 import { getPlanRecommendation } from "@/lib/planRecommendation";
 import RiskBadge from "@/components/RiskBadge";
 import RiskScoreBar from "@/components/RiskScoreBar";
@@ -16,6 +16,7 @@ export default function CustomerTable({ customers }: { customers: Customer[] }) 
               <th className="px-5 py-3">Name</th>
               <th className="px-5 py-3">Plan</th>
               <th className="px-5 py-3">Risk Score</th>
+              <th className="px-5 py-3">Revenue at Risk</th>
               <th className="px-5 py-3">Last Active</th>
               <th className="px-5 py-3">Category</th>
               <th className="px-5 py-3">Recommendation</th>
@@ -40,6 +41,9 @@ export default function CustomerTable({ customers }: { customers: Customer[] }) 
                 <td className="px-5 py-3">
                   <RiskScoreBar score={customer.churnRisk} category={customer.riskCategory} />
                 </td>
+                <td className="px-5 py-3 font-medium text-neutral-800 tabular-nums">
+                  {formatCurrency(getCustomerRevenueAtRisk(customer))}
+                </td>
                 <td className="px-5 py-3 text-neutral-600">{formatDate(customer.lastActive)}</td>
                 <td className="px-5 py-3">
                   <RiskBadge category={customer.riskCategory} />
@@ -51,7 +55,7 @@ export default function CustomerTable({ customers }: { customers: Customer[] }) 
             ))}
             {customers.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-5 py-10 text-center text-neutral-600">
+                <td colSpan={7} className="px-5 py-10 text-center text-neutral-600">
                   No customers match the current filters.
                 </td>
               </tr>

@@ -224,7 +224,11 @@ export default function CustomerDetailContent({ customer: baseCustomer }: { cust
             </p>
           </div>
 
-          <DraftMessagePanel context={aiContext} recommendedAction={recommendation.action} />
+          <DraftMessagePanel
+            context={aiContext}
+            recommendedAction={recommendation.action}
+            email={baseCustomer.email}
+          />
         </div>
       </div>
     </>

@@ -509,6 +509,12 @@ export function getRiskDistribution(
   }));
 }
 
-export function getTopCustomersByRisk(list: Customer[] = customers, limit: number = 10): Customer[] {
-  return [...list].sort((a, b) => b.churnRisk - a.churnRisk).slice(0, limit);
+export function getCustomerRevenueAtRisk(customer: Customer): number {
+  return (customer.churnRisk / 100) * customer.monthlyValue;
+}
+
+export function getTopCustomersByRevenueAtRisk(list: Customer[] = customers, limit: number = 10): Customer[] {
+  return [...list]
+    .sort((a, b) => getCustomerRevenueAtRisk(b) - getCustomerRevenueAtRisk(a))
+    .slice(0, limit);
 }

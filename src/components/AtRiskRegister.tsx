@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Customer } from "@/lib/mockData";
+import { getCustomerRevenueAtRisk, type Customer } from "@/lib/mockData";
 import { formatCurrency } from "@/lib/risk";
 import { getChurnReason } from "@/lib/churnReason";
 import { getPlanRecommendation } from "@/lib/planRecommendation";
@@ -11,13 +11,11 @@ export default function AtRiskRegister({ customers }: { customers: Customer[] })
     (c) => c.riskCategory === "At-risk" || c.riskCategory === "Under-utilized"
   );
 
-  // At-risk first (most urgent), then under-utilized; each group ranked by churn score.
-  const sorted = [...registered].sort((a, b) => {
-    if (a.riskCategory !== b.riskCategory) {
-      return a.riskCategory === "At-risk" ? -1 : 1;
-    }
-    return b.churnRisk - a.churnRisk;
-  });
+  // Ranked by revenue at risk (churn score x monthly value) so high-value churners
+  // surface first, regardless of plan tier.
+  const sorted = [...registered].sort(
+    (a, b) => getCustomerRevenueAtRisk(b) - getCustomerRevenueAtRisk(a)
+  );
 
   return (
     <div className="overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm">
@@ -29,6 +27,7 @@ export default function AtRiskRegister({ customers }: { customers: Customer[] })
               <th className="px-5 py-3">Plan</th>
               <th className="px-5 py-3">Monthly Value</th>
               <th className="px-5 py-3">Churn Score</th>
+              <th className="px-5 py-3">Revenue at Risk</th>
               <th className="px-5 py-3">Category</th>
               <th className="px-5 py-3">Top Reason</th>
               <th className="px-5 py-3">Recommended Action</th>
@@ -58,6 +57,9 @@ export default function AtRiskRegister({ customers }: { customers: Customer[] })
                   <td className="px-5 py-3 font-medium text-neutral-800 tabular-nums">
                     {customer.churnRisk}
                   </td>
+                  <td className="px-5 py-3 font-medium text-neutral-800 tabular-nums">
+                    {formatCurrency(getCustomerRevenueAtRisk(customer))}
+                  </td>
                   <td className="px-5 py-3">
                     <RiskBadge category={customer.riskCategory} />
                   </td>
@@ -70,7 +72,7 @@ export default function AtRiskRegister({ customers }: { customers: Customer[] })
             })}
             {sorted.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-5 py-10 text-center text-neutral-600">
+                <td colSpan={8} className="px-5 py-10 text-center text-neutral-600">
                   No at-risk or under-utilized customers right now.
                 </td>
               </tr>

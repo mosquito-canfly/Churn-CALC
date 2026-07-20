@@ -13,13 +13,13 @@ import {
   getPercentAtRisk,
   getRevenueAtRisk,
   getMRR,
-  getTopCustomersByRisk,
+  getTopCustomersByRevenueAtRisk,
 } from "@/lib/mockData";
 import { formatCurrency } from "@/lib/risk";
 
 export default function OverviewPage() {
   const { customers, error } = useCustomersWithRisk();
-  const topCustomers = getTopCustomersByRisk(customers, 10);
+  const topCustomers = getTopCustomersByRevenueAtRisk(customers, 10);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">

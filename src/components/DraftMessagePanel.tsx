@@ -1,15 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { MessageSquareText, Loader2, AlertTriangle } from "lucide-react";
+import { MessageSquareText, Loader2, AlertTriangle, Mail } from "lucide-react";
 import type { AICustomerContext, DraftMessageResult } from "@/lib/aiTypes";
 
 interface DraftMessagePanelProps {
   context: AICustomerContext;
   recommendedAction?: string;
+  email: string;
 }
 
-export default function DraftMessagePanel({ context, recommendedAction }: DraftMessagePanelProps) {
+export default function DraftMessagePanel({ context, recommendedAction, email }: DraftMessagePanelProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [draft, setDraft] = useState<DraftMessageResult | null>(null);
@@ -69,6 +70,19 @@ export default function DraftMessagePanel({ context, recommendedAction }: DraftM
         <div className="mt-4 rounded-lg bg-neutral-50 p-4 text-sm leading-relaxed text-neutral-700">
           <p className="font-medium text-neutral-900">{draft.subject}</p>
           <p className="mt-2 whitespace-pre-line">{draft.body}</p>
+          <div className="mt-4 flex flex-col items-start gap-1.5 border-t border-neutral-200 pt-4">
+            <a
+              href={`mailto:${email}?subject=${encodeURIComponent(draft.subject)}&body=${encodeURIComponent(draft.body)}`}
+              className="inline-flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-3.5 py-2 text-sm font-medium text-neutral-800 hover:bg-neutral-50"
+            >
+              <Mail size={14} aria-hidden="true" />
+              Open in email client
+            </a>
+            <p className="text-xs text-neutral-500">
+              Opens this message in your default email app, pre-filled and ready to review — it
+              isn&apos;t sent automatically.
+            </p>
+          </div>
         </div>
       )}
     </div>
