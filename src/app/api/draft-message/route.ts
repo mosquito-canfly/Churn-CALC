@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { callGemini, extractJson } from "@/lib/gemini";
+import { buildFallbackDraftMessage } from "@/lib/draftMessage";
 import type { AICustomerContext, DraftMessageResult } from "@/lib/aiTypes";
 
 interface DraftMessageInput extends AICustomerContext {
@@ -37,13 +38,11 @@ function isDraftMessageResult(value: unknown): value is DraftMessageResult {
 }
 
 function fallbackResult(c: DraftMessageInput): DraftMessageResult {
-  const firstName = c.name.split(" ")[0];
-  return {
-    subject: `Checking in, ${firstName}`,
-    body: `Hi ${c.name},\n\nWe noticed you haven't been getting the most out of your ${c.planTier} plan lately and wanted to check in. If anything's been in the way, we're here to help.${
-      c.recommendedAction ? ` ${c.recommendedAction}` : ""
-    }\n\nLet us know how we can support you.\n\nBest,\nThe Team`,
-  };
+  return buildFallbackDraftMessage({
+    name: c.name,
+    planTier: c.planTier,
+    recommendedAction: c.recommendedAction,
+  });
 }
 
 export async function POST(request: Request) {

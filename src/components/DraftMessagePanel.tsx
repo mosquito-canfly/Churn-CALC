@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { MessageSquareText, Loader2, AlertTriangle, Mail } from "lucide-react";
 import type { AICustomerContext, DraftMessageResult } from "@/lib/aiTypes";
+import { buildMailtoHref } from "@/lib/mailto";
 
 interface DraftMessagePanelProps {
   context: AICustomerContext;
@@ -72,7 +73,7 @@ export default function DraftMessagePanel({ context, recommendedAction, email }:
           <p className="mt-2 whitespace-pre-line">{draft.body}</p>
           <div className="mt-4 flex flex-col items-start gap-1.5 border-t border-neutral-200 pt-4">
             <a
-              href={`mailto:${email}?subject=${encodeURIComponent(draft.subject)}&body=${encodeURIComponent(draft.body)}`}
+              href={buildMailtoHref(email, draft.subject, draft.body)}
               className="inline-flex items-center gap-2 rounded-lg border border-neutral-300 bg-white px-3.5 py-2 text-sm font-medium text-neutral-800 hover:bg-neutral-50"
             >
               <Mail size={14} aria-hidden="true" />

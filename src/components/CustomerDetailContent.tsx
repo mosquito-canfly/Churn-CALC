@@ -10,6 +10,7 @@ import { getChurnReason } from "@/lib/churnReason";
 import { formatCurrency, formatDate } from "@/lib/risk";
 import RiskBadge from "@/components/RiskBadge";
 import RiskWhatIfPanel from "@/components/RiskWhatIfPanel";
+import CustomerFeedbackPanel from "@/components/CustomerFeedbackPanel";
 import DraftMessagePanel from "@/components/DraftMessagePanel";
 
 interface LivePrediction {
@@ -179,8 +180,9 @@ export default function CustomerDetailContent({ customer: baseCustomer }: { cust
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-5">
-        <div className="lg:col-span-2">
+        <div className="space-y-6 lg:col-span-2">
           <RiskWhatIfPanel customer={displayCustomer} />
+          <CustomerFeedbackPanel customer={displayCustomer} />
         </div>
 
         <div className="space-y-6 lg:col-span-3">

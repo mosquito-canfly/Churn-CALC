@@ -7,6 +7,7 @@ import RiskDistributionChart from "@/components/RiskDistributionChart";
 import CustomerTable from "@/components/CustomerTable";
 import AtRiskRegister from "@/components/AtRiskRegister";
 import ChurnReasonSummary from "@/components/ChurnReasonSummary";
+import RetentionOutbox from "@/components/RetentionOutbox";
 import UploadModal from "@/components/UploadModal";
 import { useCustomersWithRisk } from "@/lib/useCustomersWithRisk";
 import {
@@ -75,6 +76,10 @@ export default function OverviewPage() {
           </a>
         </div>
         <CustomerTable customers={topCustomers} />
+      </div>
+
+      <div className="mt-6">
+        <RetentionOutbox customers={customers} />
       </div>
 
       <div className="mt-6">
