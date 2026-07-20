@@ -13,13 +13,15 @@ import {
   getPercentAtRisk,
   getRevenueAtRisk,
   getMRR,
-  getTopCustomersByRevenueAtRisk,
+  getActionableCustomers,
+  rankByRevenueAtRisk,
 } from "@/lib/mockData";
 import { formatCurrency } from "@/lib/risk";
 
 export default function OverviewPage() {
   const { customers, error } = useCustomersWithRisk();
-  const topCustomers = getTopCustomersByRevenueAtRisk(customers, 10);
+  const rankedAtRisk = rankByRevenueAtRisk(getActionableCustomers(customers));
+  const topCustomers = rankedAtRisk.slice(0, 5);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
@@ -56,7 +58,13 @@ export default function OverviewPage() {
 
       <div className="mt-6">
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-sm font-medium text-neutral-500">Highest Risk Customers</h2>
+          <div>
+            <h2 className="text-sm font-medium text-neutral-500">Highest Risk Customers</h2>
+            <p className="mt-1 text-sm text-neutral-600">
+              Top {topCustomers.length} by revenue at risk — see the full list in the
+              register below.
+            </p>
+          </div>
           <a href="/customers" className="text-sm font-medium text-neutral-600 hover:underline">
             View all
           </a>
@@ -68,8 +76,8 @@ export default function OverviewPage() {
         <div className="mb-3">
           <h2 className="text-sm font-medium text-neutral-500">At-Risk Register</h2>
           <p className="mt-1 text-sm text-neutral-600">
-            Every at-risk and under-utilized customer, with the top driver behind their
-            score and the recommended action to take.
+            Every at-risk and under-utilized customer, ranked by revenue at risk, with the
+            top driver behind their score and the recommended action to take.
           </p>
         </div>
         <AtRiskRegister customers={customers} />

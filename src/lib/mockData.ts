@@ -509,12 +509,23 @@ export function getRiskDistribution(
   }));
 }
 
+// The deterministic dollar-value formula: expected revenue lost if this customer churns.
+// Distinct from churnRisk (the model's 0-100 prediction) — this is business
+// prioritization math on top of it, not a model output.
 export function getCustomerRevenueAtRisk(customer: Customer): number {
   return (customer.churnRisk / 100) * customer.monthlyValue;
 }
 
-export function getTopCustomersByRevenueAtRisk(list: Customer[] = customers, limit: number = 10): Customer[] {
-  return [...list]
-    .sort((a, b) => getCustomerRevenueAtRisk(b) - getCustomerRevenueAtRisk(a))
-    .slice(0, limit);
+// At-risk + Under-utilized: the pool of customers that warrant action. Shared by the
+// Overview's Highest Risk summary and the At-Risk Register so they agree on membership.
+export function getActionableCustomers(list: Customer[] = customers): Customer[] {
+  return list.filter(
+    (c) => c.riskCategory === "At-risk" || c.riskCategory === "Under-utilized"
+  );
+}
+
+// Sorts (does not filter or cap) by Revenue at Risk descending. Callers slice after
+// sorting, so a capped view never skips a genuinely higher-revenue-at-risk customer.
+export function rankByRevenueAtRisk(list: Customer[]): Customer[] {
+  return [...list].sort((a, b) => getCustomerRevenueAtRisk(b) - getCustomerRevenueAtRisk(a));
 }

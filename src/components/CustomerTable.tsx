@@ -15,7 +15,7 @@ export default function CustomerTable({ customers }: { customers: Customer[] }) 
             <tr className="border-b border-neutral-200 bg-neutral-50 text-xs font-medium uppercase tracking-wide text-neutral-500">
               <th className="px-5 py-3">Name</th>
               <th className="px-5 py-3">Plan</th>
-              <th className="px-5 py-3">Risk Score</th>
+              <th className="px-5 py-3">Churn Score</th>
               <th className="px-5 py-3">Revenue at Risk</th>
               <th className="px-5 py-3">Last Active</th>
               <th className="px-5 py-3">Category</th>

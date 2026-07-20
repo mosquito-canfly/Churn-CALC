@@ -1,5 +1,10 @@
 import Link from "next/link";
-import { getCustomerRevenueAtRisk, type Customer } from "@/lib/mockData";
+import {
+  getActionableCustomers,
+  getCustomerRevenueAtRisk,
+  rankByRevenueAtRisk,
+  type Customer,
+} from "@/lib/mockData";
 import { formatCurrency } from "@/lib/risk";
 import { getChurnReason } from "@/lib/churnReason";
 import { getPlanRecommendation } from "@/lib/planRecommendation";
@@ -7,15 +12,7 @@ import RiskBadge from "@/components/RiskBadge";
 import RecommendationBadge from "@/components/RecommendationBadge";
 
 export default function AtRiskRegister({ customers }: { customers: Customer[] }) {
-  const registered = customers.filter(
-    (c) => c.riskCategory === "At-risk" || c.riskCategory === "Under-utilized"
-  );
-
-  // Ranked by revenue at risk (churn score x monthly value) so high-value churners
-  // surface first, regardless of plan tier.
-  const sorted = [...registered].sort(
-    (a, b) => getCustomerRevenueAtRisk(b) - getCustomerRevenueAtRisk(a)
-  );
+  const sorted = rankByRevenueAtRisk(getActionableCustomers(customers));
 
   return (
     <div className="overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm">
