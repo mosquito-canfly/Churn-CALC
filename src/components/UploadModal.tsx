@@ -40,7 +40,7 @@ export default function UploadModal() {
           setOpen(false);
           triggerRef.current?.focus();
         }}
-        className="w-full max-w-md rounded-xl border-0 bg-white p-6 shadow-lg backdrop:bg-neutral-900/40"
+        className="fixed inset-0 m-auto max-h-[calc(100vh-2rem)] w-[calc(100%-2rem)] max-w-md overflow-y-auto rounded-xl border-0 bg-white p-6 shadow-lg backdrop:fixed backdrop:inset-0 backdrop:bg-neutral-900/40"
       >
         <div className="flex items-center justify-between">
           <h2 id="upload-modal-title" className="text-base font-semibold text-neutral-900">
