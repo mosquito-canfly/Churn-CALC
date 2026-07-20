@@ -6,6 +6,7 @@ import RevenueImpactPanel from "@/components/RevenueImpactPanel";
 import RiskDistributionChart from "@/components/RiskDistributionChart";
 import CustomerTable from "@/components/CustomerTable";
 import AtRiskRegister from "@/components/AtRiskRegister";
+import ChurnReasonSummary from "@/components/ChurnReasonSummary";
 import UploadModal from "@/components/UploadModal";
 import { useCustomersWithRisk } from "@/lib/useCustomersWithRisk";
 import {
@@ -54,6 +55,10 @@ export default function OverviewPage() {
 
       <div className="mt-6">
         <RiskDistributionChart customers={customers} />
+      </div>
+
+      <div className="mt-6">
+        <ChurnReasonSummary customers={rankedAtRisk} />
       </div>
 
       <div className="mt-6">

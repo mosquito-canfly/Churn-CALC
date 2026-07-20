@@ -117,3 +117,36 @@ export function getChurnReason(customer: Customer): ChurnReason {
 
   return { reason: top.reason, factor: top.factor };
 }
+
+// Short, book-wide category labels for each factor (distinct from the per-customer
+// `reason` text above, which is specific to that customer's numbers).
+export const CHURN_FACTOR_LABELS: Record<ChurnFactor, string> = {
+  stale_login: "Disengaged (days since login)",
+  low_usage: "Low feature usage",
+  rare_login: "Rarely logs in",
+  negative_ticket: "Unresolved support ticket",
+  none: "No significant signal",
+};
+
+export interface ChurnReasonBreakdownEntry {
+  factor: ChurnFactor;
+  label: string;
+  count: number;
+}
+
+/**
+ * Aggregates a customer list by top churn factor (via getChurnReason above — no
+ * independent re-derivation), sorted by count descending. Factors with zero matches
+ * are omitted rather than shown as empty bars.
+ */
+export function getChurnReasonBreakdown(customers: Customer[]): ChurnReasonBreakdownEntry[] {
+  const counts = new Map<ChurnFactor, number>();
+  for (const customer of customers) {
+    const { factor } = getChurnReason(customer);
+    counts.set(factor, (counts.get(factor) ?? 0) + 1);
+  }
+
+  return Array.from(counts.entries())
+    .map(([factor, count]) => ({ factor, label: CHURN_FACTOR_LABELS[factor], count }))
+    .sort((a, b) => b.count - a.count);
+}
