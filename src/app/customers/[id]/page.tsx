@@ -24,7 +24,7 @@ export default async function CustomerDetailPage({
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
       <Link
         href="/customers"
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-neutral-500 hover:text-neutral-800"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-neutral-400 hover:text-sky-400"
       >
         <ArrowLeft size={14} />
         Back to customers

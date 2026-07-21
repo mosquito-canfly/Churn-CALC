@@ -13,10 +13,10 @@ export default function MobileNav() {
   const pathname = usePathname();
 
   return (
-    <header className="md:hidden sticky top-0 z-10 border-b border-neutral-200 bg-white/90 backdrop-blur">
+    <header className="md:hidden sticky top-0 z-10 border-b border-neutral-800 bg-neutral-950/90 backdrop-blur">
       <div className="flex items-center justify-between px-4 py-3">
-        <span className="text-base font-semibold tracking-tight text-neutral-900">
-          Churn-CALC
+        <span className="text-base font-semibold tracking-tight text-white">
+          Churn<span className="text-sky-400">-CALC</span>
         </span>
         <nav className="flex items-center gap-1">
           {navItems.map((item) => {
@@ -30,11 +30,11 @@ export default function MobileNav() {
                 aria-current={isActive ? "page" : undefined}
                 className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium ${
                   isActive
-                    ? "bg-neutral-900 text-white"
-                    : "text-neutral-600 hover:bg-neutral-100"
+                    ? "bg-neutral-800 text-white"
+                    : "text-neutral-400 hover:bg-neutral-900"
                 }`}
               >
-                <Icon size={14} aria-hidden="true" />
+                <Icon size={14} className={isActive ? "text-sky-400" : ""} aria-hidden="true" />
                 {item.label}
               </Link>
             );

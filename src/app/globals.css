@@ -1,8 +1,9 @@
 @import "tailwindcss";
 
+/* Always-dark theme (not conditional on OS preference) to match the design system. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0a0a;
+  --foreground: #fafafa;
 }
 
 @theme inline {
@@ -12,26 +13,22 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Consistent, high-contrast keyboard focus indicator across every interactive element. */
+/* Consistent, high-contrast keyboard focus indicator across every interactive element.
+   sky-400 (#38bdf8): 8.4:1 against the dark card surface, well above the WCAG AA 3:1
+   minimum for non-text UI indicators. */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 [role="switch"]:focus-visible,
+[role="tab"]:focus-visible,
 [tabindex]:focus-visible {
-  outline: 2px solid #2563eb;
+  outline: 2px solid #38bdf8;
   outline-offset: 2px;
   border-radius: 4px;
 }

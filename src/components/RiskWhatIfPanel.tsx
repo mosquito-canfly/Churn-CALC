@@ -13,12 +13,12 @@ function categoryForScore(score: number): RiskCategory {
   return "Healthy";
 }
 
-// Darker shades than the base risk palette so the ring meets WCAG AA (3:1+) against
-// the card's white background.
+// Bright -400 steps, matching riskColors elsewhere, so the ring meets WCAG AA (3:1+)
+// against the card's dark surface.
 const RING_COLOR: Record<RiskCategory, string> = {
-  Healthy: "#047857",
-  "Under-utilized": "#b45309",
-  "At-risk": "#b91c1c",
+  Healthy: "#34d399",
+  "Under-utilized": "#fbbf24",
+  "At-risk": "#f87171",
 };
 
 const LOGIN_FREQUENCIES: LoginFrequency[] = ["Rarely", "Weekly", "Daily"];
@@ -120,15 +120,17 @@ export default function RiskWhatIfPanel({ customer }: { customer: Customer }) {
   const offset = circumference * (1 - displayedRisk / 100);
 
   return (
-    <div className="rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
+    <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-medium text-neutral-500">Churn Risk Score</h2>
+        <h2 className="text-xs font-medium tracking-wide text-neutral-400 uppercase">
+          Churn Risk Score
+        </h2>
         {isDirty && (
           <button
             type="button"
             onClick={handleReset}
             aria-label="Reset what-if inputs to this customer's actual values"
-            className="flex items-center gap-1 text-xs font-medium text-neutral-600 hover:text-neutral-900"
+            className="flex items-center gap-1 text-xs font-medium text-neutral-400 hover:text-sky-400"
           >
             <RotateCcw size={12} aria-hidden="true" />
             Reset
@@ -139,7 +141,7 @@ export default function RiskWhatIfPanel({ customer }: { customer: Customer }) {
       <div className="mt-4 flex flex-col items-center" aria-live="polite" aria-atomic="true">
         <div className="relative h-36 w-36">
           <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90" aria-hidden="true">
-            <circle cx="60" cy="60" r="54" fill="none" stroke="#f0f0f0" strokeWidth="10" />
+            <circle cx="60" cy="60" r="54" fill="none" stroke="#262626" strokeWidth="10" />
             <circle
               cx="60"
               cy="60"
@@ -154,10 +156,10 @@ export default function RiskWhatIfPanel({ customer }: { customer: Customer }) {
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-3xl font-semibold tracking-tight text-neutral-900">
+            <span className="text-3xl font-semibold tracking-tight text-white">
               {displayedRisk}
             </span>
-            <span className="text-xs text-neutral-600">/ 100</span>
+            <span className="text-xs text-neutral-400">out of 100</span>
           </div>
         </div>
         <span
@@ -166,46 +168,51 @@ export default function RiskWhatIfPanel({ customer }: { customer: Customer }) {
           {category}
         </span>
 
-        <p className="mt-3 text-xs text-neutral-600">
-          Baseline {baselineRisk} → {displayedRisk},{" "}
-          <span
-            className={
-              delta < 0
-                ? "font-medium text-emerald-700"
-                : delta > 0
-                  ? "font-medium text-red-700"
-                  : "font-medium text-neutral-600"
-            }
-          >
-            {delta > 0 ? "+" : ""}
-            {delta}
-          </span>
+        <p className="mt-3 text-xs text-neutral-400">
+          Recalculated live from the What-If Simulator below.
         </p>
+        {isDirty && (
+          <p className="mt-1 text-xs text-neutral-400">
+            Baseline {baselineRisk} → {displayedRisk},{" "}
+            <span
+              className={
+                delta < 0
+                  ? "font-medium text-emerald-400"
+                  : delta > 0
+                    ? "font-medium text-red-400"
+                    : "font-medium text-neutral-400"
+              }
+            >
+              {delta > 0 ? "+" : ""}
+              {delta}
+            </span>
+          </p>
+        )}
 
         {loading && (
-          <div className="mt-2 flex items-center gap-1.5 text-xs text-neutral-600">
+          <div className="mt-2 flex items-center gap-1.5 text-xs text-neutral-400">
             <Loader2 size={12} className="animate-spin" aria-hidden="true" />
             Recalculating...
           </div>
         )}
         {!loading && error && (
-          <p role="alert" className="mt-2 text-xs text-red-700">
+          <p role="alert" className="mt-2 text-xs text-red-400">
             {error}
           </p>
         )}
       </div>
 
-      <div className="mt-6 space-y-5 border-t border-neutral-100 pt-5">
-        <p className="text-xs font-medium uppercase tracking-wide text-neutral-600">
+      <div className="mt-6 space-y-5 border-t border-neutral-800 pt-5">
+        <p className="text-xs font-medium uppercase tracking-wide text-neutral-400">
           What-if simulator
         </p>
 
         <div>
           <div className="flex items-center justify-between text-sm">
-            <label htmlFor="usage-slider" className="text-neutral-600">
+            <label htmlFor="usage-slider" className="text-neutral-400">
               Daily usage
             </label>
-            <span className="font-medium text-neutral-800">{dailyUsageMins} min</span>
+            <span className="font-medium text-neutral-200">{dailyUsageMins} min</span>
           </div>
           <input
             id="usage-slider"
@@ -216,18 +223,18 @@ export default function RiskWhatIfPanel({ customer }: { customer: Customer }) {
             value={dailyUsageMins}
             aria-valuetext={`${dailyUsageMins} minutes`}
             onChange={(e) => setDailyUsageMins(Number(e.target.value))}
-            className="mt-2 w-full accent-neutral-900"
+            className="mt-2 w-full accent-sky-400"
           />
         </div>
 
         <div>
-          <div id="login-frequency-label" className="text-sm text-neutral-600">
+          <div id="login-frequency-label" className="text-sm text-neutral-400">
             Login frequency
           </div>
           <div
             role="group"
             aria-labelledby="login-frequency-label"
-            className="mt-2 grid grid-cols-3 gap-1 rounded-lg bg-neutral-100 p-1"
+            className="mt-2 grid grid-cols-3 gap-1 rounded-lg bg-neutral-800 p-1"
           >
             {LOGIN_FREQUENCIES.map((freq) => (
               <button
@@ -237,8 +244,8 @@ export default function RiskWhatIfPanel({ customer }: { customer: Customer }) {
                 onClick={() => setLoginFrequency(freq)}
                 className={`rounded-md py-1.5 text-xs font-medium transition-colors ${
                   loginFrequency === freq
-                    ? "bg-white text-neutral-900 shadow-sm"
-                    : "text-neutral-600 hover:text-neutral-900"
+                    ? "bg-sky-700 text-white"
+                    : "text-neutral-400 hover:text-neutral-200"
                 }`}
               >
                 {freq}
@@ -249,10 +256,10 @@ export default function RiskWhatIfPanel({ customer }: { customer: Customer }) {
 
         <div>
           <div className="flex items-center justify-between text-sm">
-            <label htmlFor="days-since-login-slider" className="text-neutral-600">
+            <label htmlFor="days-since-login-slider" className="text-neutral-400">
               Days since last login
             </label>
-            <span className="font-medium text-neutral-800">{daysSinceLastLogin}d</span>
+            <span className="font-medium text-neutral-200">{daysSinceLastLogin}d</span>
           </div>
           <input
             id="days-since-login-slider"
@@ -263,16 +270,16 @@ export default function RiskWhatIfPanel({ customer }: { customer: Customer }) {
             value={daysSinceLastLogin}
             aria-valuetext={`${daysSinceLastLogin} days`}
             onChange={(e) => setDaysSinceLastLogin(Number(e.target.value))}
-            className="mt-2 w-full accent-neutral-900"
+            className="mt-2 w-full accent-sky-400"
           />
         </div>
 
         <div>
           <div className="flex items-center justify-between text-sm">
-            <label htmlFor="usage-pct-slider" className="text-neutral-600">
+            <label htmlFor="usage-pct-slider" className="text-neutral-400">
               Core feature usage
             </label>
-            <span className="font-medium text-neutral-800">{coreFeatureUsagePercentage}%</span>
+            <span className="font-medium text-neutral-200">{coreFeatureUsagePercentage}%</span>
           </div>
           <input
             id="usage-pct-slider"
@@ -283,16 +290,16 @@ export default function RiskWhatIfPanel({ customer }: { customer: Customer }) {
             value={coreFeatureUsagePercentage}
             aria-valuetext={`${coreFeatureUsagePercentage} percent`}
             onChange={(e) => setCoreFeatureUsagePercentage(Number(e.target.value))}
-            className="mt-2 w-full accent-neutral-900"
+            className="mt-2 w-full accent-sky-400"
           />
         </div>
 
         <div className="flex items-center justify-between text-sm">
-          <span className="text-neutral-600">Resolve support ticket</span>
+          <span className="text-neutral-400">Resolve support ticket</span>
           <div className="flex items-center gap-2">
             <span
               className={`text-xs font-medium ${
-                resolveTicket ? "text-emerald-700" : "text-neutral-600"
+                resolveTicket ? "text-emerald-400" : "text-neutral-400"
               }`}
             >
               {resolveTicket ? "Resolved" : "Unresolved"}
@@ -304,7 +311,7 @@ export default function RiskWhatIfPanel({ customer }: { customer: Customer }) {
               aria-label="Resolve support ticket"
               onClick={() => setResolveTicket((v) => !v)}
               className={`relative h-5 w-9 shrink-0 rounded-full transition-colors duration-200 ${
-                resolveTicket ? "bg-emerald-500" : "bg-neutral-200"
+                resolveTicket ? "bg-emerald-500" : "bg-neutral-700"
               }`}
             >
               <span
@@ -316,7 +323,7 @@ export default function RiskWhatIfPanel({ customer }: { customer: Customer }) {
           </div>
         </div>
 
-        <p className="text-xs leading-relaxed text-neutral-600">
+        <p className="text-xs leading-relaxed text-neutral-400">
           Adjust the inputs above to re-run the churn model with hypothetical values and see how
           the risk score responds.
         </p>

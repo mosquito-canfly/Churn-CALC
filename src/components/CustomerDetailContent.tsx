@@ -12,6 +12,7 @@ import RiskBadge from "@/components/RiskBadge";
 import RiskWhatIfPanel from "@/components/RiskWhatIfPanel";
 import CustomerFeedbackPanel from "@/components/CustomerFeedbackPanel";
 import DraftMessagePanel from "@/components/DraftMessagePanel";
+import SectionHeading from "@/components/SectionHeading";
 
 interface LivePrediction {
   churnRisk: number;
@@ -135,45 +136,45 @@ export default function CustomerDetailContent({ customer: baseCustomer }: { cust
 
   return (
     <>
-      <div className="mt-4 flex flex-wrap items-start justify-between gap-4 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
+      <div className="mt-4 flex flex-wrap items-start justify-between gap-4 rounded-xl border border-neutral-800 bg-neutral-900 p-6">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-xl font-semibold tracking-tight text-neutral-900">
+            <h1 className="text-xl font-semibold tracking-tight text-white">
               {baseCustomer.name}
             </h1>
             <RiskBadge category={displayCustomer.riskCategory} />
           </div>
-          <p className="mt-1 text-sm text-neutral-500">{baseCustomer.email}</p>
-          <p className="mt-2 text-sm text-neutral-700">
-            <span className="font-medium text-neutral-900">Top risk factor:</span>{" "}
+          <p className="mt-1 text-sm text-neutral-400">{baseCustomer.email}</p>
+          <p className="mt-2 text-sm text-neutral-300">
+            <span className="font-medium text-white">Top churn factor:</span>{" "}
             {churnReason.reason}
           </p>
           <dl className="mt-4 flex flex-wrap gap-x-8 gap-y-2 text-sm">
             <div>
-              <dt className="text-neutral-600">Plan Tier</dt>
-              <dd className="font-medium text-neutral-800">{baseCustomer.planTier}</dd>
+              <dt className="text-neutral-400">Plan Tier</dt>
+              <dd className="font-medium text-neutral-200">{baseCustomer.planTier}</dd>
             </div>
             <div>
-              <dt className="text-neutral-600">Monthly Value</dt>
-              <dd className="font-medium text-neutral-800">
+              <dt className="text-neutral-400">Monthly Value</dt>
+              <dd className="font-medium text-neutral-200">
                 {formatCurrency(baseCustomer.monthlyValue)}
               </dd>
             </div>
             <div>
-              <dt className="text-neutral-600">Account Age</dt>
-              <dd className="font-medium text-neutral-800">{baseCustomer.accountAgeDays} days</dd>
+              <dt className="text-neutral-400">Account Age</dt>
+              <dd className="font-medium text-neutral-200">{baseCustomer.accountAgeDays} days</dd>
             </div>
             <div>
-              <dt className="text-neutral-600">Login Frequency</dt>
-              <dd className="font-medium text-neutral-800">{baseCustomer.loginFrequency}</dd>
+              <dt className="text-neutral-400">Login Frequency</dt>
+              <dd className="font-medium text-neutral-200">{baseCustomer.loginFrequency}</dd>
             </div>
             <div>
-              <dt className="text-neutral-600">Daily Usage</dt>
-              <dd className="font-medium text-neutral-800">{baseCustomer.dailyUsageMins} min</dd>
+              <dt className="text-neutral-400">Daily Usage</dt>
+              <dd className="font-medium text-neutral-200">{baseCustomer.dailyUsageMins} min</dd>
             </div>
             <div>
-              <dt className="text-neutral-600">Last Active</dt>
-              <dd className="font-medium text-neutral-800">{formatDate(baseCustomer.lastActive)}</dd>
+              <dt className="text-neutral-400">Last Active</dt>
+              <dd className="font-medium text-neutral-200">{formatDate(baseCustomer.lastActive)}</dd>
             </div>
           </dl>
         </div>
@@ -182,46 +183,45 @@ export default function CustomerDetailContent({ customer: baseCustomer }: { cust
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-5">
         <div className="space-y-6 lg:col-span-2">
           <RiskWhatIfPanel customer={displayCustomer} />
-          <CustomerFeedbackPanel customer={displayCustomer} />
         </div>
 
         <div className="space-y-6 lg:col-span-3">
-          <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5">
-            <div className="flex items-center gap-2 text-sm font-semibold text-emerald-800">
+          <div className="rounded-xl border border-emerald-900 bg-emerald-950/40 p-5">
+            <div className="flex items-center gap-2 text-sm font-semibold text-emerald-400">
               <Sparkles size={16} aria-hidden="true" />
               AI Explanation
             </div>
             {explainLoading && (
-              <div className="mt-2 flex items-center gap-2 text-sm text-emerald-800">
+              <div className="mt-2 flex items-center gap-2 text-sm text-neutral-300">
                 <Loader2 size={14} className="animate-spin" aria-hidden="true" />
                 Generating explanation...
               </div>
             )}
             {!explainLoading && explainError && (
-              <div role="alert" className="mt-2 flex items-center gap-2 text-sm text-emerald-900">
+              <div role="alert" className="mt-2 flex items-center gap-2 text-sm text-neutral-200">
                 <AlertTriangle size={14} aria-hidden="true" />
                 {explainError}
               </div>
             )}
             {!explainLoading && !explainError && explainResult && (
-              <p className="mt-2 text-sm leading-relaxed text-emerald-900">
+              <p className="mt-2 text-sm leading-relaxed text-neutral-200">
                 {explainResult.explanation}
               </p>
             )}
           </div>
 
-          <div className="rounded-xl border border-blue-200 bg-blue-50 p-5">
-            <div className="flex items-center gap-2 text-sm font-semibold text-blue-800">
+          <div className="rounded-xl border border-sky-900 bg-sky-950/40 p-5">
+            <div className="flex items-center gap-2 text-sm font-semibold text-sky-400">
               <Target size={16} aria-hidden="true" />
               Recommended Action
             </div>
-            <p className="mt-2 text-sm font-medium text-blue-900">{recommendation.action}</p>
-            <p className="mt-1 text-sm leading-relaxed text-blue-800">{recommendation.rationale}</p>
+            <p className="mt-2 text-sm font-medium text-white">{recommendation.action}</p>
+            <p className="mt-1 text-sm leading-relaxed text-neutral-300">{recommendation.rationale}</p>
           </div>
 
-          <div className="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm">
-            <h2 className="text-sm font-semibold text-neutral-800">Recent Support Contact</h2>
-            <p className="mt-2 text-sm leading-relaxed text-neutral-600">
+          <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-5">
+            <SectionHeading title="Recent support contact" />
+            <p className="mt-2 text-sm leading-relaxed text-neutral-400">
               {baseCustomer.lastSupportTicket}
             </p>
           </div>
@@ -231,6 +231,8 @@ export default function CustomerDetailContent({ customer: baseCustomer }: { cust
             recommendedAction={recommendation.action}
             email={baseCustomer.email}
           />
+
+          <CustomerFeedbackPanel customer={displayCustomer} />
         </div>
       </div>
     </>

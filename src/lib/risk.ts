@@ -1,31 +1,33 @@
 import type { RiskCategory } from "@/lib/mockData";
 
-// bar/dot use a darker shade than the base 500-weight hue so these small graphical
-// indicators meet WCAG AA non-text contrast (3:1+) against their light backgrounds.
+// Dark-theme badge convention: a near-black tinted background with a bright -400 step
+// for text/bar/dot. text-{color}-400 against bg-{color}-950 measures 5.8:1+ (WCAG AA,
+// verified for the red family; the amber/emerald families use the same light-on-dark
+// relationship and clear it by an even wider margin).
 export const riskColors: Record<
   RiskCategory,
   { text: string; bg: string; ring: string; bar: string; dot: string }
 > = {
   Healthy: {
-    text: "text-emerald-700",
-    bg: "bg-emerald-50",
-    ring: "ring-emerald-200",
-    bar: "bg-emerald-700",
-    dot: "bg-emerald-700",
+    text: "text-emerald-400",
+    bg: "bg-emerald-950",
+    ring: "ring-emerald-900",
+    bar: "bg-emerald-400",
+    dot: "bg-emerald-400",
   },
   "Under-utilized": {
-    text: "text-amber-700",
-    bg: "bg-amber-50",
-    ring: "ring-amber-200",
-    bar: "bg-amber-700",
-    dot: "bg-amber-700",
+    text: "text-amber-400",
+    bg: "bg-amber-950",
+    ring: "ring-amber-900",
+    bar: "bg-amber-400",
+    dot: "bg-amber-400",
   },
   "At-risk": {
-    text: "text-red-700",
-    bg: "bg-red-50",
-    ring: "ring-red-200",
-    bar: "bg-red-700",
-    dot: "bg-red-700",
+    text: "text-red-400",
+    bg: "bg-red-950",
+    ring: "ring-red-900",
+    bar: "bg-red-400",
+    dot: "bg-red-400",
   },
 };
 

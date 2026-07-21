@@ -9,11 +9,11 @@ const KIND_LABELS: Record<RecommendationKind, string> = {
 };
 
 const KIND_COLORS: Record<RecommendationKind, { bg: string; text: string; ring: string }> = {
-  upsell: { bg: "bg-blue-50", text: "text-blue-700", ring: "ring-blue-200" },
-  downgrade: { bg: "bg-amber-50", text: "text-amber-700", ring: "ring-amber-200" },
-  reengage: { bg: "bg-red-50", text: "text-red-700", ring: "ring-red-200" },
-  retain: { bg: "bg-orange-50", text: "text-orange-700", ring: "ring-orange-200" },
-  monitor: { bg: "bg-neutral-100", text: "text-neutral-500", ring: "ring-neutral-200" },
+  upsell: { bg: "bg-blue-950", text: "text-blue-400", ring: "ring-blue-900" },
+  downgrade: { bg: "bg-amber-950", text: "text-amber-400", ring: "ring-amber-900" },
+  reengage: { bg: "bg-red-950", text: "text-red-400", ring: "ring-red-900" },
+  retain: { bg: "bg-orange-950", text: "text-orange-400", ring: "ring-orange-900" },
+  monitor: { bg: "bg-neutral-800", text: "text-neutral-400", ring: "ring-neutral-700" },
 };
 
 export default function RecommendationBadge({ kind }: { kind: RecommendationKind }) {

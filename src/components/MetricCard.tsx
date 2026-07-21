@@ -9,12 +9,12 @@ interface MetricCardProps {
 
 export default function MetricCard({ label, value, icon: Icon, tone = "neutral" }: MetricCardProps) {
   return (
-    <div className="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm">
+    <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-5">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-neutral-500">{label}</span>
+        <span className="text-sm font-medium text-neutral-400">{label}</span>
         <span
           className={`flex h-8 w-8 items-center justify-center rounded-lg ${
-            tone === "danger" ? "bg-red-50 text-red-600" : "bg-neutral-100 text-neutral-600"
+            tone === "danger" ? "bg-red-950 text-red-400" : "bg-neutral-800 text-neutral-400"
           }`}
         >
           <Icon size={16} aria-hidden="true" />
@@ -22,7 +22,7 @@ export default function MetricCard({ label, value, icon: Icon, tone = "neutral" 
       </div>
       <div
         className={`mt-3 text-2xl font-semibold tracking-tight ${
-          tone === "danger" ? "text-red-600" : "text-neutral-900"
+          tone === "danger" ? "text-red-400" : "text-white"
         }`}
       >
         {value}
