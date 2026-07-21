@@ -148,7 +148,7 @@ export default function OverviewPage() {
               <div className="mb-3">
                 <SectionHeading
                   title="Highest risk customers"
-                  subtitle={`Top ${topCustomers.length} by revenue at risk — see the full list in the register below.`}
+                  subtitle={`Top ${topCustomers.length} by revenue at risk`}
                   action={
                     <Link href="/customers" className="text-sm font-medium text-sky-400 hover:text-sky-300 hover:underline">
                       View all
