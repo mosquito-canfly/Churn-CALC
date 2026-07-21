@@ -1,0 +1,199 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-21T00:00:00.000Z",
+  "title": "Design System: Churn-CALC",
+  "extensions": {
+    "colorMeta": {
+      "accent-text": {
+        "role": "primary",
+        "displayName": "Cyan Signal",
+        "canonical": "oklch(74.6% 0.16 232.661)",
+        "tonalRamp": [
+          "oklch(29.3% 0.066 243.157)",
+          "oklch(39.1% 0.09 240.876)",
+          "oklch(44.3% 0.11 240.79)",
+          "oklch(50% 0.134 242.749)",
+          "oklch(68.5% 0.169 237.323)",
+          "oklch(82.8% 0.111 230.318)",
+          "oklch(95.1% 0.026 236.824)",
+          "oklch(97.7% 0.013 236.62)"
+        ]
+      },
+      "accent-fill": {
+        "role": "primary",
+        "displayName": "Cyan Fill",
+        "canonical": "oklch(50% 0.134 242.749)",
+        "tonalRamp": [
+          "oklch(29.3% 0.066 243.157)",
+          "oklch(39.1% 0.09 240.876)",
+          "oklch(44.3% 0.11 240.79)",
+          "oklch(50% 0.134 242.749)",
+          "oklch(68.5% 0.169 237.323)",
+          "oklch(82.8% 0.111 230.318)",
+          "oklch(95.1% 0.026 236.824)",
+          "oklch(97.7% 0.013 236.62)"
+        ]
+      },
+      "page-bg": {
+        "role": "neutral",
+        "displayName": "Page",
+        "canonical": "oklch(14.5% 0 none)",
+        "tonalRamp": [
+          "oklch(14.5% 0 none)",
+          "oklch(20.5% 0 none)",
+          "oklch(26.9% 0 none)",
+          "oklch(37.1% 0 none)",
+          "oklch(55.6% 0 none)",
+          "oklch(70.8% 0 none)",
+          "oklch(97% 0 none)",
+          "oklch(98.5% 0 none)"
+        ]
+      },
+      "card-surface": {
+        "role": "neutral",
+        "displayName": "Card Surface",
+        "canonical": "oklch(20.5% 0 none)",
+        "tonalRamp": [
+          "oklch(14.5% 0 none)",
+          "oklch(20.5% 0 none)",
+          "oklch(26.9% 0 none)",
+          "oklch(37.1% 0 none)",
+          "oklch(55.6% 0 none)",
+          "oklch(70.8% 0 none)",
+          "oklch(97% 0 none)",
+          "oklch(98.5% 0 none)"
+        ]
+      },
+      "healthy": {
+        "role": "tertiary",
+        "displayName": "Healthy (Emerald)",
+        "canonical": "oklch(76.5% 0.177 163.223)",
+        "tonalRamp": [
+          "oklch(26.2% 0.051 172.552)",
+          "oklch(37.8% 0.077 168.94)",
+          "oklch(43.2% 0.095 166.913)",
+          "oklch(50.8% 0.118 165.612)",
+          "oklch(69.6% 0.17 162.48)",
+          "oklch(84.5% 0.143 164.978)",
+          "oklch(95% 0.052 163.051)",
+          "oklch(97.9% 0.021 166.113)"
+        ]
+      },
+      "under-utilized": {
+        "role": "tertiary",
+        "displayName": "Under-utilized (Amber)",
+        "canonical": "oklch(82.8% 0.189 84.429)",
+        "tonalRamp": [
+          "oklch(27.9% 0.077 45.635)",
+          "oklch(41.4% 0.112 45.904)",
+          "oklch(47.3% 0.137 46.201)",
+          "oklch(55.5% 0.163 48.998)",
+          "oklch(76.9% 0.188 70.08)",
+          "oklch(87.9% 0.169 91.605)",
+          "oklch(96.2% 0.059 95.617)",
+          "oklch(98.7% 0.022 95.277)"
+        ]
+      },
+      "at-risk": {
+        "role": "tertiary",
+        "displayName": "At-risk (Red)",
+        "canonical": "oklch(70.4% 0.191 22.216)",
+        "tonalRamp": [
+          "oklch(25.8% 0.092 26.042)",
+          "oklch(39.6% 0.141 25.723)",
+          "oklch(44.4% 0.177 26.899)",
+          "oklch(50.5% 0.213 27.518)",
+          "oklch(63.7% 0.237 25.331)",
+          "oklch(80.8% 0.114 19.571)",
+          "oklch(93.6% 0.032 17.717)",
+          "oklch(97.1% 0.013 17.38)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Metric card values (Total Customers, MRR, Revenue at Risk)." },
+      "headline": { "displayName": "Headline", "purpose": "Page titles and customer names." },
+      "title": { "displayName": "Title", "purpose": "Section headings inside SectionHeading." },
+      "body": { "displayName": "Body", "purpose": "Default text across tables, dates, descriptions, controls." },
+      "label": { "displayName": "Label", "purpose": "Badges, table headers, small metadata." }
+    },
+    "shadows": [
+      { "name": "lifted-button", "value": "shadow-sm", "purpose": "The Upload button's slight lift off the page." },
+      { "name": "modal", "value": "shadow-lg", "purpose": "The UploadModal dialog surface, paired with a dark backdrop scrim." }
+    ],
+    "motion": [],
+    "breakpoints": [
+      { "name": "md", "value": "768px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Solid cyan CTA button (e.g. Upload, Send email).",
+      "html": "<button class=\"ds-btn-primary\">Upload</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 8px; background: #0369a1; color: #fafafa; font-size: 14px; font-weight: 500; padding: 8px 16px; border-radius: 8px; border: none; transition: background 0.15s; } .ds-btn-primary:hover { background: #075985; } .ds-btn-primary:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Bordered, no-fill button (e.g. Cancel).",
+      "html": "<button class=\"ds-btn-secondary\">Cancel</button>",
+      "css": ".ds-btn-secondary { background: transparent; color: #d4d4d4; font-size: 14px; font-weight: 500; padding: 8px 16px; border-radius: 8px; border: 1px solid #404040; transition: background 0.15s; } .ds-btn-secondary:hover { background: #262626; } .ds-btn-secondary:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }"
+    },
+    {
+      "name": "Risk Badge",
+      "kind": "chip",
+      "refersTo": "badge-status",
+      "description": "Pill-shaped risk category indicator (Healthy / Under-utilized / At-risk).",
+      "html": "<span class=\"ds-badge ds-badge-at-risk\"><span class=\"ds-badge-dot\"></span>At-risk</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; gap: 6px; border-radius: 9999px; padding: 4px 10px; font-size: 12px; font-weight: 500; } .ds-badge-dot { width: 6px; height: 6px; border-radius: 9999px; background: currentColor; } .ds-badge-at-risk { background: #450a0a; color: #f87171; box-shadow: inset 0 0 0 1px #7f1d1d; }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Base metric/panel container.",
+      "html": "<div class=\"ds-card\">Card content</div>",
+      "css": ".ds-card { background: #171717; border: 1px solid #262626; border-radius: 12px; padding: 20px; }"
+    },
+    {
+      "name": "Sidebar Logo Tile",
+      "kind": "custom",
+      "refersTo": "logo-tile",
+      "description": "Flat bordered cyan icon chip in the sidebar header — deliberately not a gradient.",
+      "html": "<span class=\"ds-logo-tile\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M12 20V10M18 20V4M6 20v-4\"/></svg></span>",
+      "css": ".ds-logo-tile { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 12px; border: 1px solid #075985; background: #082f49; color: #38bdf8; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Quiet Control Room",
+    "overview": "Churn-CALC reads like an instrument panel built for someone making real revenue decisions, not a marketing site for an AI feature. The surface is dark and settled, so that the handful of things that actually need attention (a red risk badge, a revenue-at-risk figure, a recommended action) are the only things that visually raise their hand. Cyan is used deliberately and sparingly: bright for text, icons, and active state; a deeper, muted step for solid button fills. This system explicitly rejects the AI-dashboard reflex: no gradient-filled logo tiles, no pastel AI-feature panels, no single accent color doing every job, no decorative side-stripe borders standing in for real hierarchy.",
+    "keyCharacteristics": [
+      "Near-black surfaces (neutral-950 page, neutral-900 cards) with a subtle neutral-800 border.",
+      "A deliberate two-step cyan: bright sky-400 for text/icons, deeper sky-700 for solid fills.",
+      "Risk severity color is a signal, not a decoration.",
+      "Flat by default; depth comes from a border and lighter surface tone, not shadow."
+    ],
+    "rules": [
+      { "name": "The Two-Step Cyan Rule", "body": "Cyan text/icons and cyan button fills are never the same shade. Bright sky-400 is for anything read directly off a dark surface; the deeper sky-700/sky-800 is reserved for solid fills carrying white text.", "section": "colors" },
+      { "name": "The One Hue, One Meaning Rule", "body": "Emerald, amber, and red belong to Healthy, Under-utilized, and At-risk respectively, and to nothing else.", "section": "colors" },
+      { "name": "The Border-Not-Shadow Rule", "body": "Depth on a resting surface comes from a border and a lighter fill, never a shadow. Shadow only appears on something genuinely elevated above the page.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep the two-step cyan intact: sky-400 for text/icons, sky-700/sky-800 only for solid fills.",
+      "Do use the near-black tint + bright text badge convention for every status or risk indicator, paired with a text label or icon.",
+      "Do keep cards flat: border + surface, no drop shadow.",
+      "Do give every risk category exactly one meaning across the whole app."
+    ],
+    "donts": [
+      "Don't put a gradient on the sidebar logo tile or any icon tile.",
+      "Don't give the AI Explanation or Recommended Action panels a softer pastel AI treatment.",
+      "Don't lean on cyan as the only accent for everything on a screen.",
+      "Don't add a colored side-stripe border to cards, list rows, or callouts.",
+      "Don't treat Arial/system-default as a deliberate typographic choice going forward."
+    ]
+  }
+}
