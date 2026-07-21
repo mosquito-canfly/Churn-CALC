@@ -186,11 +186,15 @@ export default function CustomerDetailContent({ customer: baseCustomer }: { cust
         </div>
 
         <div className="space-y-6 lg:col-span-3">
-          <div className="rounded-xl border border-emerald-900 bg-emerald-950/40 p-5">
-            <div className="flex items-center gap-2 text-sm font-semibold text-emerald-400">
-              <Sparkles size={16} aria-hidden="true" />
-              AI Explanation
-            </div>
+          <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-5">
+            <SectionHeading
+              title={
+                <span className="flex items-center gap-2">
+                  <Sparkles size={16} className="text-sky-400" aria-hidden="true" />
+                  AI Explanation
+                </span>
+              }
+            />
             {explainLoading && (
               <div className="mt-2 flex items-center gap-2 text-sm text-neutral-300">
                 <Loader2 size={14} className="animate-spin" aria-hidden="true" />
@@ -210,11 +214,15 @@ export default function CustomerDetailContent({ customer: baseCustomer }: { cust
             )}
           </div>
 
-          <div className="rounded-xl border border-sky-900 bg-sky-950/40 p-5">
-            <div className="flex items-center gap-2 text-sm font-semibold text-sky-400">
-              <Target size={16} aria-hidden="true" />
-              Recommended Action
-            </div>
+          <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-5">
+            <SectionHeading
+              title={
+                <span className="flex items-center gap-2">
+                  <Target size={16} className="text-sky-400" aria-hidden="true" />
+                  Recommended Action
+                </span>
+              }
+            />
             <p className="mt-2 text-sm font-medium text-white">{recommendation.action}</p>
             <p className="mt-1 text-sm leading-relaxed text-neutral-300">{recommendation.rationale}</p>
           </div>

@@ -21,6 +21,18 @@ colors:
   at-risk: "#f87171"
   at-risk-tint-bg: "#450a0a"
   at-risk-tint-border: "#7f1d1d"
+  rec-upsell: "#a684ff"
+  rec-upsell-tint-bg: "#2f0d68"
+  rec-upsell-tint-border: "#4d179a"
+  rec-downgrade: "#7c86ff"
+  rec-downgrade-tint-bg: "#1e1a4d"
+  rec-downgrade-tint-border: "#312c85"
+  rec-reengage: "#ff637e"
+  rec-reengage-tint-bg: "#4d0218"
+  rec-reengage-tint-border: "#8b0836"
+  rec-retain: "#00d5be"
+  rec-retain-tint-bg: "#022f2e"
+  rec-retain-tint-border: "#0b4f4a"
 typography:
   display:
     fontFamily: "Arial, Helvetica, sans-serif"
@@ -135,6 +147,22 @@ a near-black tinted background, the inverse of a light-theme badge:
 - **At-risk** — text/bar/dot `#f87171` (`red-400`) on `#450a0a` (`red-950`), ring
   `#7f1d1d` (`red-900`).
 
+### Tertiary (Recommendation Kind)
+A recommendation kind (what to do about a customer) is a different question from a
+risk category (how healthy they are), so it owns a hue family entirely disjoint from
+Semantic (Risk) Colors above — never emerald/amber/red, so the two questions never
+share a color in the same table row:
+- **Upsell** — `#a684ff` (`violet-400`) on `#2f0d68` (`violet-950`), ring `#4d179a`
+  (`violet-900`).
+- **Downgrade** — `#7c86ff` (`indigo-400`) on `#1e1a4d` (`indigo-950`), ring `#312c85`
+  (`indigo-900`).
+- **Re-engage** — `#ff637e` (`rose-400`) on `#4d0218` (`rose-950`), ring `#8b0836`
+  (`rose-900`).
+- **Retain** — `#00d5be` (`teal-400`) on `#022f2e` (`teal-950`), ring `#0b4f4a`
+  (`teal-900`).
+- **Monitor** — plain `neutral-800`/`neutral-400`/`neutral-700`, matching the
+  lowest-urgency tier of every other neutral control in the app.
+
 ### Named Rules
 **The Two-Step Cyan Rule.** Cyan text/icons and cyan button fills are never the same
 shade. Bright `sky-400` is for anything read directly off a dark surface; the deeper
@@ -142,7 +170,9 @@ shade. Bright `sky-400` is for anything read directly off a dark surface; the de
 
 **The One Hue, One Meaning Rule.** Emerald, amber, and red belong to Healthy,
 Under-utilized, and At-risk respectively, and to nothing else. They are never
-repurposed as generic decorative color.
+repurposed as generic decorative color — including for a different taxonomy like
+recommendation kind, which is why that group draws from violet/indigo/rose/teal
+instead.
 
 ## 3. Typography
 
@@ -196,6 +226,12 @@ elevated above the page (a modal, a lifted button), not on ordinary cards.
   background + bright text (see Semantic Colors), a small leading dot in the same hue.
   Never a side-stripe or left-border variant.
 
+### Badges (recommendation kind)
+- **Style:** same full-pill construction as risk badges (`rounded-full`, `ring-1
+  ring-inset`, tint background + bright text), but drawn from the Recommendation Kind
+  hues, never risk hues — no leading dot, so the two badge families are also
+  distinguishable by shape, not color alone.
+
 ### Cards / Containers
 - **Corner Style:** `rounded-xl` (12px).
 - **Background:** `neutral-900`.
@@ -227,13 +263,17 @@ elevated above the page (a modal, a lifted button), not on ordinary cards.
   Reserve shadow for genuinely floating elements (the upload button, the modal).
 - **Do** give every risk category (`emerald`/`amber`/`red`) exactly one meaning across
   the whole app; never repurpose one for plain decoration.
+- **Do** keep recommendation-kind badges (`violet`/`indigo`/`rose`/`teal`) visually
+  disjoint from risk-category badges (`emerald`/`amber`/`red`) — they answer different
+  questions and must never share a hue in the same row.
 
 ### Don't:
 - **Don't** put a gradient on the sidebar logo tile or any icon tile — it's a flat
   bordered cyan chip today, not a gradient fill.
-- **Don't** give the AI Explanation or Recommended Action panels a softer pastel "AI"
-  treatment — they use the same near-black tint + bright text convention as every other
-  panel; model output isn't visually set apart as a gimmick.
+- **Don't** put the AI Explanation or Recommended Action panels in a tinted background
+  or give them anything other than the same `neutral-800`/`neutral-900` card + real
+  `<h2>` heading every other panel uses — model output isn't visually set apart as a
+  gimmick. Distinguish them only with a small `sky-400` icon next to the heading text.
 - **Don't** lean on cyan as the only accent for everything on a screen; risk category
   color carries its own meaning and shouldn't be recolored cyan "for consistency."
 - **Don't** add a colored side-stripe (`border-left`/`border-right` accent) to cards,
