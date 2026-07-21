@@ -15,37 +15,28 @@ AI-drafted messages — that you review and send yourself.
 
 ### Overview dashboard
 
-![Overview metrics](./docs/screenshots/Screenshot%202026-07-20%20154651.png)
-*Overview: total customers, % at risk, revenue at risk, MRR, plus monthly/annual revenue at risk and the estimated recoverable amount.*
+![Overview executive insights](./docs/screenshots/Screenshot%202026-07-21%20152859.png)
+*Overview (Executive Insights): total customers, % at risk, revenue at risk and MRR, with a smart-insight callout and the risk-distribution and churn-driver panels.*
 
-![Risk distribution](./docs/screenshots/Screenshot%202026-07-20%20154707.png)
-*Risk distribution across Healthy, At-risk, and Under-utilized, with labelled counts (not conveyed by colour alone).*
+![Net subscribers and highest risk customers](./docs/screenshots/Screenshot%202026-07-21%20152914.png)
+*Net Subscribers by Month and the Highest Risk Customers table, ranked by revenue at risk with Churn Score and Revenue at Risk as distinct columns.*
 
-![What's driving churn](./docs/screenshots/Screenshot%202026-07-20%20154735.png)
-*What's Driving Churn: at-risk/under-utilized customers grouped by their top churn factor.*
+![At-risk register](./docs/screenshots/Screenshot%202026-07-21%20152942.png)
+*Action Center: the At-Risk Register — every at-risk and under-utilized customer with monthly value, churn score, revenue at risk, top reason and recommended action.*
 
-![Highest risk customers](./docs/screenshots/Screenshot%202026-07-20%20154748.png)
-*Highest Risk Customers ranked by revenue at risk, with Churn Score and Revenue at Risk as distinct columns.*
+![Retention outbox](./docs/screenshots/Screenshot%202026-07-21%20152951.png)
+*Action Center: the Retention Outbox drafts a personalized retention email for every at-risk customer at once, each reviewed and sent individually.*
 
-![Retention outbox](./docs/screenshots/Screenshot%202026-07-20%20154802.png)
-*Retention Outbox: drafts a retention message for every at-risk customer at once, each reviewed and sent individually.*
-
-![At-risk register](./docs/screenshots/Screenshot%202026-07-20%20154813.png)
-*At-Risk Register: every at-risk/under-utilized customer, ranked by revenue at risk, with top reason and recommended action.*
+![Customers list](./docs/screenshots/Screenshot%202026-07-21%20153000.png)
+*Customers: searchable, sortable roster with category filters, churn score, risk category and recommended action per customer.*
 
 ### Customer detail
 
-![Customer detail](./docs/screenshots/Screenshot%202026-07-20%20154924.png)
-*Customer detail: churn score, top risk factor, an AI explanation of why, and a recommended action.*
+![Customer detail](./docs/screenshots/Screenshot%202026-07-21%20153100.png)
+*Customer detail: churn risk score, top risk factor, an AI explanation of why, and a deterministic recommended action.*
 
-![What-if simulator](./docs/screenshots/Screenshot%202026-07-20%20155217.png)
-*What-if simulator: adjusting inputs re-scores the customer live against the real model.*
-
-![Draft retention message](./docs/screenshots/Screenshot%202026-07-20%20155227.png)
-*Draft retention message with "Open in email client" (mailto) — nothing is sent automatically.*
-
-![Customer feedback](./docs/screenshots/Screenshot%202026-07-20%20163113.png)
-*Customer feedback: recording satisfaction feeds the sentiment input so the live score responds — session-only, no retraining.*
+![What-if simulator and draft message](./docs/screenshots/Screenshot%202026-07-21%20153119.png)
+*What-if simulator (live re-scoring), the drafted retention message with mailto send, and per-customer feedback with source and date.*
 
 ## Features
 
@@ -79,10 +70,10 @@ AI-drafted messages — that you review and send yourself.
   pre-filled; there's no server-side send and no email backend
 - Interactive what-if panel that recomputes real risk live when you change customer
   inputs (usage, login frequency, days since login, feature usage, support-ticket state)
-- Customer feedback signal: recording a customer's satisfaction (negative/neutral/
-  positive) feeds the same sentiment input the model already uses, so the live churn
-  score responds in real time — session-only, and it does not retrain or otherwise
-  improve the model
+- Customer feedback: each customer shows one collected feedback entry — a sentiment
+  pill (negative/neutral/positive), a source and date, and a quote — coherent with
+  their risk category; it's a presentational display and does not feed the live
+  churn score
 - Revenue-at-risk / ROI business metrics on the dashboard
 - Accessible by default: keyboard-navigable controls, visible focus indicators, WCAG AA
   colour contrast, and charts that expose a text alternative and don't rely on colour
