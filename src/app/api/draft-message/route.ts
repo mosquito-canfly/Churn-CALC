@@ -60,11 +60,10 @@ export async function POST(request: Request) {
   let text: string;
   try {
     text = await callGemini(buildPrompt(customer));
-  } catch (err) {
-    return NextResponse.json(
-      { error: err instanceof Error ? err.message : "Gemini request failed." },
-      { status: 503 }
-    );
+  } catch {
+    // Gemini unreachable, rate-limited, misconfigured, or otherwise erroring — never
+    // surface that to the UI, fall back to the deterministic templated message instead.
+    return NextResponse.json(fallbackResult(customer));
   }
 
   const parsed = extractJson(text);
