@@ -3,6 +3,8 @@
 Churn-CALC — a churn-prediction dashboard that tells subscription businesses which
 customers are about to leave, why, and what to do about it.
 
+**Live demo:** [https://churn-c.vercel.app/](https://churn-c.vercel.app/)
+
 ## Overview
 
 Churn-CALC helps small SaaS and subscription teams — the ones who can't afford
