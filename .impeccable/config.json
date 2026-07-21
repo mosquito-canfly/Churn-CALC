@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "helvetica",
+        "createdAt": "2026-07-21T07:06:19.337Z",
+        "reason": "User explicitly directed the app to use Helvetica as its font"
+      }
+    ]
+  }
+}
