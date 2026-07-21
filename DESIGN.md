@@ -33,6 +33,8 @@ colors:
   rec-retain: "#00d5be"
   rec-retain-tint-bg: "#022f2e"
   rec-retain-tint-border: "#0b4f4a"
+  insight-green: "#05df72"
+  insight-green-border: "#0d542b"
 typography:
   display:
     fontFamily: "Arial, Helvetica, sans-serif"
@@ -163,6 +165,18 @@ share a color in the same table row:
 - **Monitor** — plain `neutral-800`/`neutral-400`/`neutral-700`, matching the
   lowest-urgency tier of every other neutral control in the app.
 
+### Insight Green (Fixed Accent)
+Two spots use green as a fixed, non-semantic accent rather than a risk signal: the
+Overview's "recoverable revenue" callout, and the customer detail page's AI
+Explanation panel. Both draw from Tailwind's `green` family — a distinct hue from
+`emerald` (`green-400` sits at OKLCH hue ~152° vs. `emerald-400`'s ~163°, a
+perceptibly different, more grass-toned green) — specifically so this accent can
+never be mistaken for the Healthy risk color, and so it never changes with the
+customer's actual risk category:
+- **Insight Green** — `#05df72` (`green-400`) for icons/heading text/emphasis, `#0d542b`
+  (`green-900`) for the AI Explanation panel's border. Fixed regardless of context;
+  never swapped for `riskColors[category]`.
+
 ### Named Rules
 **The Two-Step Cyan Rule.** Cyan text/icons and cyan button fills are never the same
 shade. Bright `sky-400` is for anything read directly off a dark surface; the deeper
@@ -171,8 +185,8 @@ shade. Bright `sky-400` is for anything read directly off a dark surface; the de
 **The One Hue, One Meaning Rule.** Emerald, amber, and red belong to Healthy,
 Under-utilized, and At-risk respectively, and to nothing else. They are never
 repurposed as generic decorative color — including for a different taxonomy like
-recommendation kind, which is why that group draws from violet/indigo/rose/teal
-instead.
+recommendation kind (violet/indigo/rose/teal) or a fixed non-semantic accent
+(`green`, deliberately a different Tailwind family from `emerald`).
 
 ## 3. Typography
 
@@ -224,7 +238,8 @@ elevated above the page (a modal, a lifted button), not on ordinary cards.
 ### Badges (risk / status)
 - **Style:** full pill (`rounded-full`), `ring-1 ring-inset`, a semantic tint
   background + bright text (see Semantic Colors), a small leading dot in the same hue.
-  Never a side-stripe or left-border variant.
+  Never a side-stripe or left-border variant. Always `whitespace-nowrap` — a badge
+  wrapping onto a second line inside its pill is a bug, not a valid narrow state.
 
 ### Badges (recommendation kind)
 - **Style:** same full-pill construction as risk badges (`rounded-full`, `ring-1
@@ -235,17 +250,48 @@ elevated above the page (a modal, a lifted button), not on ordinary cards.
 ### Cards / Containers
 - **Corner Style:** `rounded-xl` (12px).
 - **Background:** `neutral-900`.
-- **Border:** `neutral-800`, 1px, full perimeter — never a colored accent edge.
+- **Border:** `neutral-800`, 1px, full perimeter, by default.
+- **Fixed-accent variant:** exactly two panels (AI Explanation, Recommended Action)
+  swap the border color only — `green-900` / `sky-900` respectively, still 1px, still
+  full perimeter, background still plain `neutral-900` — never a tinted fill and never
+  a thicker or single-side border (a thicker accent border clashes with the rounded
+  corner). Paired with heading text in the same hue. See Do's and Don'ts.
 - **Shadow Strategy:** none (see Elevation).
 - **Internal Padding:** `p-5`/`p-6` (20–24px).
 
+### Field Strip
+- **Use:** a compact row of labeled stat cells — currently the customer detail page's
+  header (Plan Tier, Monthly Value, Account Age, Login Frequency, Daily Usage, Last
+  Active).
+- **Style:** a CSS grid with a 1px `neutral-800` gap between cells (`gap-px` on a
+  `neutral-800` background, each cell `neutral-900`) inside one `rounded-lg
+  neutral-800` border — renders as hairline dividers between fields without manually
+  managing `border-right`/last-child edge cases. Label (`text-xs neutral-400`) above
+  value (`text-sm font-medium neutral-200`), `px-5 py-4` per cell.
+- **Responsive:** column count steps down at narrower widths (e.g. 6 → 3 → 2); the
+  divider grid re-flows automatically rather than needing separate mobile markup.
+
 ### Navigation (Sidebar)
 - **Logo tile:** a flat `rounded-xl` chip, `sky-950` background, `sky-800` border,
-  `sky-400` icon — bordered and tinted, not a gradient fill.
+  `sky-400` icon — bordered and tinted, not a gradient fill. The icon itself is a
+  standalone `Logo` component (`src/components/Logo.tsx`) rather than inline markup,
+  specifically so a future asset swap only touches one file; every path/stroke in it
+  uses `currentColor` so it always follows the tile's `sky-400`, never carrying its
+  own fixed hue.
 - **Nav item:** active = `neutral-800` fill + white text + `sky-400` icon; inactive =
   `neutral-400` text, `neutral-900` hover fill.
 - **Behavior:** `sticky top-0 h-screen overflow-y-auto` — stays visible while content
   scrolls, scrolls internally rather than clipping.
+
+### Insight Callout
+- **Use:** the Overview's recoverable-revenue callout ("Acting on your N at-risk
+  customers could protect an estimated $X/month...").
+- **Style:** the same plain card as every other panel (`rounded-xl border
+  border-neutral-800 bg-neutral-900 p-5`) — not a full-width tinted alert bar. An icon
+  chip reuses `MetricCard`'s own icon-chip idiom (`h-8 w-8 rounded-lg bg-neutral-800`)
+  with an Insight Green icon instead of the danger-tone red, so the callout reads as a
+  natural variant of an existing pattern rather than a bolted-on banner. The dollar
+  figure is the only bolded/colored text in the sentence.
 
 ### Modal
 - Native `<dialog>` (`UploadModal`), centered via `fixed inset-0 m-auto`, `neutral-900`
@@ -266,14 +312,20 @@ elevated above the page (a modal, a lifted button), not on ordinary cards.
 - **Do** keep recommendation-kind badges (`violet`/`indigo`/`rose`/`teal`) visually
   disjoint from risk-category badges (`emerald`/`amber`/`red`) — they answer different
   questions and must never share a hue in the same row.
+- **Do** keep the AI Explanation (`green-900` border, `green-400` heading) and
+  Recommended Action (`sky-900` border, `sky-400` heading) colors fixed — never derive
+  either from `riskCategory`. An At-risk customer's explanation must never render in
+  Insight Green being mistaken for "Healthy," which is exactly why that accent is
+  `green`, not `emerald`, in the first place.
 
 ### Don't:
 - **Don't** put a gradient on the sidebar logo tile or any icon tile — it's a flat
   bordered cyan chip today, not a gradient fill.
-- **Don't** put the AI Explanation or Recommended Action panels in a tinted background
-  or give them anything other than the same `neutral-800`/`neutral-900` card + real
-  `<h2>` heading every other panel uses — model output isn't visually set apart as a
-  gimmick. Distinguish them only with a small `sky-400` icon next to the heading text.
+- **Don't** give the AI Explanation or Recommended Action panels a tinted background
+  fill, a side-stripe border, or a decorative icon next to the heading — a real `<h2>`
+  (via `SectionHeading`), a plain `neutral-900` background, and a colored 1px full
+  border are the whole treatment. Model output isn't visually set apart as a gimmick;
+  it's a restrained variant of the same card every other panel uses.
 - **Don't** lean on cyan as the only accent for everything on a screen; risk category
   color carries its own meaning and shouldn't be recolored cyan "for consistency."
 - **Don't** add a colored side-stripe (`border-left`/`border-right` accent) to cards,

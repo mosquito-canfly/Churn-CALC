@@ -10,12 +10,13 @@ export default function RevenueImpactPanel({ customers }: { customers: Customer[
   const recoverable = monthlyAtRisk * RETENTION_RATE;
 
   return (
-    <div className="flex items-start gap-2 rounded-lg border border-emerald-900 bg-emerald-950 px-4 py-3 text-sm text-neutral-300">
-      <ShieldCheck size={16} className="mt-0.5 shrink-0 text-emerald-400" aria-hidden="true" />
-      <p>
-        <span className="font-semibold text-white">Smart Insight:</span> Acting on your{" "}
-        {atRiskCustomers.length} at-risk customers could protect an estimated{" "}
-        <span className="font-semibold text-emerald-400">{formatCurrency(recoverable)}/month</span> in
+    <div className="flex items-start gap-3 rounded-xl border border-neutral-800 bg-neutral-900 p-5">
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-neutral-800 text-green-400">
+        <ShieldCheck size={16} aria-hidden="true" />
+      </span>
+      <p className="text-sm leading-relaxed text-neutral-300">
+        Acting on your {atRiskCustomers.length} at-risk customers could protect an estimated{" "}
+        <span className="font-semibold text-green-400">{formatCurrency(recoverable)}/month</span> in
         recurring revenue.
       </p>
     </div>

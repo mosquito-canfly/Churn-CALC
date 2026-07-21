@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-07-21T00:00:00.000Z",
+  "generatedAt": "2026-07-21T12:00:00.000Z",
   "title": "Design System: Churn-CALC",
   "extensions": {
     "colorMeta": {
@@ -108,6 +108,17 @@
           "oklch(93.6% 0.032 17.717)",
           "oklch(97.1% 0.013 17.38)"
         ]
+      },
+      "insight-green": {
+        "role": "accent",
+        "displayName": "Insight Green (fixed, not risk-linked)",
+        "canonical": "oklch(79.2% 0.209 151.711)",
+        "tonalRamp": [
+          "oklch(26.6% 0.065 152.934)",
+          "oklch(39.3% 0.095 152.535)",
+          "oklch(52.7% 0.154 150.069)",
+          "oklch(79.2% 0.209 151.711)"
+        ]
       }
     },
     "typographyMeta": {
@@ -163,9 +174,25 @@
       "name": "Sidebar Logo Tile",
       "kind": "custom",
       "refersTo": "logo-tile",
-      "description": "Flat bordered cyan icon chip in the sidebar header — deliberately not a gradient.",
-      "html": "<span class=\"ds-logo-tile\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M12 20V10M18 20V4M6 20v-4\"/></svg></span>",
+      "description": "Flat bordered cyan icon chip in the sidebar header — deliberately not a gradient. The icon is a placeholder magnifier + rising bar-chart shape (src/components/Logo.tsx), pending a final asset swap; every stroke/fill uses currentColor so it always follows the tile's sky-400.",
+      "html": "<span class=\"ds-logo-tile\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\"><circle cx=\"10\" cy=\"10\" r=\"6\" stroke=\"currentColor\" stroke-width=\"1.8\"/><line x1=\"14.5\" y1=\"14.5\" x2=\"20\" y2=\"20\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"/><rect x=\"6.7\" y=\"10\" width=\"1.6\" height=\"3\" rx=\"0.4\" fill=\"currentColor\"/><rect x=\"9.2\" y=\"8\" width=\"1.6\" height=\"5\" rx=\"0.4\" fill=\"currentColor\"/><rect x=\"11.7\" y=\"6\" width=\"1.6\" height=\"7\" rx=\"0.4\" fill=\"currentColor\"/></svg></span>",
       "css": ".ds-logo-tile { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 12px; border: 1px solid #075985; background: #082f49; color: #38bdf8; }"
+    },
+    {
+      "name": "Fixed-Accent Panel",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "AI Explanation / Recommended Action variant — plain neutral-900 card, colored 1px border + colored heading text only, color fixed per panel (never derived from risk category).",
+      "html": "<div class=\"ds-card ds-card-accent-green\"><h2 class=\"ds-card-heading-green\">AI Explanation</h2></div>",
+      "css": ".ds-card-accent-green { border-color: #0d542b; } .ds-card-heading-green { color: #05df72; font-size: 16px; font-weight: 600; } .ds-card-accent-sky { border-color: #0c4a6e; } .ds-card-heading-sky { color: #38bdf8; font-size: 16px; font-weight: 600; }"
+    },
+    {
+      "name": "Field Strip",
+      "kind": "custom",
+      "refersTo": "field-strip",
+      "description": "Bordered, divided stat strip — customer detail header's 6 fields (Plan Tier, Monthly Value, Account Age, Login Frequency, Daily Usage, Last Active).",
+      "html": "<dl class=\"ds-field-strip\"><div class=\"ds-field-cell\"><dt>Plan Tier</dt><dd>Pro</dd></div></dl>",
+      "css": ".ds-field-strip { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1px; background: #262626; border: 1px solid #262626; border-radius: 8px; overflow: hidden; } .ds-field-cell { background: #171717; padding: 16px 20px; } .ds-field-cell dt { font-size: 12px; color: #a3a3a3; } .ds-field-cell dd { margin-top: 4px; font-size: 14px; font-weight: 500; color: #e5e5e5; }"
     }
   ],
   "narrative": {
@@ -180,17 +207,20 @@
     "rules": [
       { "name": "The Two-Step Cyan Rule", "body": "Cyan text/icons and cyan button fills are never the same shade. Bright sky-400 is for anything read directly off a dark surface; the deeper sky-700/sky-800 is reserved for solid fills carrying white text.", "section": "colors" },
       { "name": "The One Hue, One Meaning Rule", "body": "Emerald, amber, and red belong to Healthy, Under-utilized, and At-risk respectively, and to nothing else.", "section": "colors" },
-      { "name": "The Border-Not-Shadow Rule", "body": "Depth on a resting surface comes from a border and a lighter fill, never a shadow. Shadow only appears on something genuinely elevated above the page.", "section": "elevation" }
+      { "name": "The Border-Not-Shadow Rule", "body": "Depth on a resting surface comes from a border and a lighter fill, never a shadow. Shadow only appears on something genuinely elevated above the page.", "section": "elevation" },
+      { "name": "The Fixed-Accent Rule", "body": "AI Explanation (green) and Recommended Action (sky) each have one fixed color, never derived from riskCategory. Green is Tailwind's green family, deliberately distinct from emerald (Healthy), so it can never read as a health signal.", "section": "colors" }
     ],
     "dos": [
       "Do keep the two-step cyan intact: sky-400 for text/icons, sky-700/sky-800 only for solid fills.",
       "Do use the near-black tint + bright text badge convention for every status or risk indicator, paired with a text label or icon.",
       "Do keep cards flat: border + surface, no drop shadow.",
-      "Do give every risk category exactly one meaning across the whole app."
+      "Do give every risk category exactly one meaning across the whole app.",
+      "Do keep AI Explanation/Recommended Action colors fixed regardless of risk category.",
+      "Do keep every badge on one line (whitespace-nowrap) regardless of container width."
     ],
     "donts": [
       "Don't put a gradient on the sidebar logo tile or any icon tile.",
-      "Don't give the AI Explanation or Recommended Action panels a softer pastel AI treatment.",
+      "Don't give the AI Explanation or Recommended Action panels a tinted background fill, a side-stripe border, or a decorative icon next to the heading.",
       "Don't lean on cyan as the only accent for everything on a screen.",
       "Don't add a colored side-stripe border to cards, list rows, or callouts.",
       "Don't treat Arial/system-default as a deliberate typographic choice going forward."

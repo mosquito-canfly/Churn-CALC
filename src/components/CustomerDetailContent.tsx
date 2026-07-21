@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Sparkles, Target, Loader2, AlertTriangle } from "lucide-react";
+import { Loader2, AlertTriangle } from "lucide-react";
 import type { Customer, RiskCategory } from "@/lib/mockData";
 import { predictChurn } from "@/lib/mlService";
 import type { AICustomerContext, ExplainResult } from "@/lib/aiTypes";
@@ -149,32 +149,32 @@ export default function CustomerDetailContent({ customer: baseCustomer }: { cust
             <span className="font-medium text-white">Top churn factor:</span>{" "}
             {churnReason.reason}
           </p>
-          <dl className="mt-4 flex flex-wrap gap-x-8 gap-y-2 text-sm">
-            <div>
-              <dt className="text-neutral-400">Plan Tier</dt>
-              <dd className="font-medium text-neutral-200">{baseCustomer.planTier}</dd>
+          <dl className="mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-neutral-800 bg-neutral-800 sm:grid-cols-3 lg:grid-cols-6">
+            <div className="bg-neutral-900 px-5 py-4">
+              <dt className="text-xs text-neutral-400">Plan Tier</dt>
+              <dd className="mt-1 text-sm font-medium text-neutral-200">{baseCustomer.planTier}</dd>
             </div>
-            <div>
-              <dt className="text-neutral-400">Monthly Value</dt>
-              <dd className="font-medium text-neutral-200">
+            <div className="bg-neutral-900 px-5 py-4">
+              <dt className="text-xs text-neutral-400">Monthly Value</dt>
+              <dd className="mt-1 text-sm font-medium text-neutral-200">
                 {formatCurrency(baseCustomer.monthlyValue)}
               </dd>
             </div>
-            <div>
-              <dt className="text-neutral-400">Account Age</dt>
-              <dd className="font-medium text-neutral-200">{baseCustomer.accountAgeDays} days</dd>
+            <div className="bg-neutral-900 px-5 py-4">
+              <dt className="text-xs text-neutral-400">Account Age</dt>
+              <dd className="mt-1 text-sm font-medium text-neutral-200">{baseCustomer.accountAgeDays} days</dd>
             </div>
-            <div>
-              <dt className="text-neutral-400">Login Frequency</dt>
-              <dd className="font-medium text-neutral-200">{baseCustomer.loginFrequency}</dd>
+            <div className="bg-neutral-900 px-5 py-4">
+              <dt className="text-xs text-neutral-400">Login Frequency</dt>
+              <dd className="mt-1 text-sm font-medium text-neutral-200">{baseCustomer.loginFrequency}</dd>
             </div>
-            <div>
-              <dt className="text-neutral-400">Daily Usage</dt>
-              <dd className="font-medium text-neutral-200">{baseCustomer.dailyUsageMins} min</dd>
+            <div className="bg-neutral-900 px-5 py-4">
+              <dt className="text-xs text-neutral-400">Daily Usage</dt>
+              <dd className="mt-1 text-sm font-medium text-neutral-200">{baseCustomer.dailyUsageMins} min</dd>
             </div>
-            <div>
-              <dt className="text-neutral-400">Last Active</dt>
-              <dd className="font-medium text-neutral-200">{formatDate(baseCustomer.lastActive)}</dd>
+            <div className="bg-neutral-900 px-5 py-4">
+              <dt className="text-xs text-neutral-400">Last Active</dt>
+              <dd className="mt-1 text-sm font-medium text-neutral-200">{formatDate(baseCustomer.lastActive)}</dd>
             </div>
           </dl>
         </div>
@@ -186,15 +186,8 @@ export default function CustomerDetailContent({ customer: baseCustomer }: { cust
         </div>
 
         <div className="space-y-6 lg:col-span-3">
-          <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-5">
-            <SectionHeading
-              title={
-                <span className="flex items-center gap-2">
-                  <Sparkles size={16} className="text-sky-400" aria-hidden="true" />
-                  AI Explanation
-                </span>
-              }
-            />
+          <div className="rounded-xl border border-green-900 bg-neutral-900 p-5">
+            <SectionHeading title={<span className="text-green-400">AI Explanation</span>} />
             {explainLoading && (
               <div className="mt-2 flex items-center gap-2 text-sm text-neutral-300">
                 <Loader2 size={14} className="animate-spin" aria-hidden="true" />
@@ -214,15 +207,8 @@ export default function CustomerDetailContent({ customer: baseCustomer }: { cust
             )}
           </div>
 
-          <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-5">
-            <SectionHeading
-              title={
-                <span className="flex items-center gap-2">
-                  <Target size={16} className="text-sky-400" aria-hidden="true" />
-                  Recommended Action
-                </span>
-              }
-            />
+          <div className="rounded-xl border border-sky-900 bg-neutral-900 p-5">
+            <SectionHeading title={<span className="text-sky-400">Recommended Action</span>} />
             <p className="mt-2 text-sm font-medium text-white">{recommendation.action}</p>
             <p className="mt-1 text-sm leading-relaxed text-neutral-300">{recommendation.rationale}</p>
           </div>

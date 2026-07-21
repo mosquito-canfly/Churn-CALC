@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Gauge, LayoutDashboard, LifeBuoy, LogOut, Sparkles, Users } from "lucide-react";
+import { LayoutDashboard, LifeBuoy, LogOut, Sparkles, Users } from "lucide-react";
+import Logo from "@/components/Logo";
 
 const navItems = [
   { href: "/", label: "Overview", icon: LayoutDashboard },
@@ -16,7 +17,7 @@ export default function Sidebar() {
     <aside className="hidden md:sticky md:top-0 md:flex md:h-screen md:w-64 md:flex-col md:overflow-y-auto md:border-r md:border-neutral-800 md:bg-neutral-950 md:shrink-0">
       <div className="flex items-center gap-2.5 px-6 py-6">
         <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-sky-800 bg-sky-950 text-sky-400">
-          <Gauge size={18} aria-hidden="true" />
+          <Logo size={18} />
         </span>
         <span className="text-lg font-semibold tracking-tight text-white">
           Churn<span className="text-sky-400">-CALC</span>
