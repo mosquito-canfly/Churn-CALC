@@ -4,6 +4,7 @@ FastAPI server that loads the trained XGBoost model and serves churn predictions
 The Next.js app calls this over HTTP from its /api/predict route.
 """
 import json
+import os
 from pathlib import Path
 from typing import List
 
@@ -116,9 +117,23 @@ def categorize(risk_prob: float, usage_mins: int, days_since_last_login: int, us
 # ---- App -----------------------------------------------------------------
 app = FastAPI(title="Churn-CALC ML Service")
 
+# Always allow local dev; add the deployed frontend's origin(s) via FRONTEND_ORIGIN
+# (comma-separated, e.g. "https://churn-calc.vercel.app,https://churn-calc-git-main.vercel.app").
+DEV_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]
+
+
+def _allowed_origins() -> list[str]:
+    configured = [
+        origin.strip()
+        for origin in os.environ.get("FRONTEND_ORIGIN", "").split(",")
+        if origin.strip()
+    ]
+    return list(dict.fromkeys(configured + DEV_ORIGINS))
+
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],          # fine for hackathon/local; tighten for prod
+    allow_origins=_allowed_origins(),
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -159,3 +174,13 @@ def predict(req: PredictRequest):
             ticket_sentiment=round(float(s), 4),
         ))
     return {"predictions": preds}
+
+
+if __name__ == "__main__":
+    # Respects Render's injected $PORT when the service is started as `python main.py`;
+    # `uvicorn main:app --port $PORT` (the documented start command) already gets this
+    # from the shell, so this is a fallback for that alternate invocation, not the
+    # primary path.
+    import uvicorn
+
+    uvicorn.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 8000)))
